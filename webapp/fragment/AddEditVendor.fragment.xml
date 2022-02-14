@@ -1,0 +1,65 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
+	xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
+	<!--	<Dialog title="{= ${BRMVendor>/Edit} ? Update Stage Approver: Add Stage Approver}" class="sapUiSizeCompact">-->
+	<Dialog title="Add Stage Approver" class="sapUiSizeCompact">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<f:Form editable="true" width="100%">
+					<f:layout>
+						<f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="5" emptySpanL="2"
+							emptySpanM="2" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="1" singleContainerFullSize="false"/>
+					</f:layout>
+					<f:formContainers>
+						<f:FormContainer >
+							<f:formElements>
+								<f:FormElement >
+									<f:label>
+										<Label text="Type of user"/>
+									</f:label>
+									<Select selectedKey="{BRMVendor>/usertype}">
+										<items>
+											<core:Item key="001" text="Requester"/>
+											<core:Item key="002" text="Approver"/>
+											<core:Item key="003" text="Steward"/>
+										</items>
+									</Select>
+								</f:FormElement>
+								<f:FormElement>
+									<f:label>
+										<Label text="Attribute"/>
+									</f:label>
+									<Select forceSelection="false" selectedKey="{BRMVendor>/attribute}">
+										<items>
+											<core:Item key="001" text="US+VEND"/>
+											<core:Item key="002" text="US+OA01"/>
+											<core:Item key="003" text="US+INVP"/>
+										</items>
+									</Select>
+								</f:FormElement>
+								<f:FormElement >
+									<f:label>
+										<Label text="Stage Approver" required="true"/>
+									</f:label>
+									<Input value="{BRMVendor>/stageapprover}" maxLength="40"/>
+								</f:FormElement>
+								<f:FormElement>
+									<f:label>
+										<Label text="Value"/>
+									</f:label>
+									<Input value="{BRMVendor>/value}" maxLength="40"/>
+								</f:FormElement>
+							</f:formElements>
+						</f:FormContainer>
+					</f:formContainers>
+				</f:Form>
+			</VBox>
+		</content>
+		<beginButton>
+		<!--	<Button text="{= ${BRMVendor>/Edit} ? Update : Create}" type="Accept" press="onSaveCustContacts"/>-->
+			<Button text="Create" type="Accept" press="onSaveCustContacts"/>
+		</beginButton>
+		<endButton>
+			<Button text="Cancel" type="Reject" press="oncloseCustContacts"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

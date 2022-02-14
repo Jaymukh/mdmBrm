@@ -1,0 +1,52 @@
+{
+	"VendorsBRMData": [{
+			"attribute": "US+VEND",
+			"value": "Country code account",
+			"stageapprover": "Krishna Chaitanya",
+			"usertype": "Requester"
+		}, {
+			"attribute": "US+VEND",
+			"value": "Country code account",
+			"stageapprover": "Anish",
+			"usertype": "Requester"
+		}, {
+			"attribute": "US+VEND",
+			"value": "Country code account",
+			"stageapprover": "Santhosh",
+			"usertype": "Requester"
+		}, {
+			"attribute": "US+OA01",
+			"value": "Country code account",
+			"stageapprover": "Ravi",
+			"usertype": "Approver"
+		}, {
+			"attribute": "US+OA01",
+			"value": "Country code account",
+			"stageapprover": "Isai",
+			"usertype": "Approver"
+		}, {
+			"attribute": "US+INVP",
+			"value": "Country code account",
+			"stageapprover": "Sanjay",
+			"usertype": "Steward"
+		}
+
+	],
+	"VENDOR_REQUESTOR": [{
+		"user": "Sanjay",
+		"emailid": "sanjay@gmail.com",
+		"pid": "PID1",
+		"acgroup": "AC Group 1"
+	}, {
+		"user": "Praveen",
+		"emailid": "praveen@gmail.com",
+		"pid": "PID2",
+		"acgroup": "AC Group 2"
+	}, {
+		"user": "Ravi",
+		"emailid": "ravi@gmail.com",
+		"pid": "PID3",
+		"acgroup": "AC Group 3"
+	}]
+
+}

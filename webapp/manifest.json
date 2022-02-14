@@ -1,0 +1,115 @@
+{
+	"_version": "1.12.0",
+	"sap.app": {
+		"id": "murphy.mdm.brm.murphybusinessrule",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"applicationVersion": {
+			"version": "1.0.0"
+		},
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"sourceTemplate": {
+			"id": "ui5template.basicSAPUI5ApplicationProject",
+			"version": "1.38.11"
+		},
+		"dataSources": {
+			"BRMJSONDATA": {
+				"uri": "model/brmjsonFile.json",
+				"type": "JSON"
+			}
+		}
+	},
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {
+			"icon": "",
+			"favIcon": "",
+			"phone": "",
+			"phone@2": "",
+			"tablet": "",
+			"tablet@2": ""
+		},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+	"sap.ui5": {
+		"flexEnabled": false,
+		"rootView": {
+			"viewName": "murphy.mdm.brm.murphybusinessrule.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "App"
+		},
+		"dependencies": {
+			"minUI5Version": "1.65.6",
+			"libs": {
+				"sap.ui.layout": {},
+				"sap.ui.core": {},
+				"sap.m": {}
+			}
+		},
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "murphy.mdm.brm.murphybusinessrule.i18n.i18n"
+				}
+			},
+			"BRMMaster": {
+				"type": "sap.ui.model.json.JSONModel",
+				"dataSource": "BRMJSONDATA",
+				"settings": {
+					"defaultBindingMode": "TwoWay"
+				}
+			},
+			"BRMVendor": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"App": {
+				"type": "sap.ui.model.json.JSONModel"
+			}
+		},
+		"resources": {
+			"css": [{
+				"uri": "css/style.css"
+			}]
+		},
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"async": true,
+				"viewPath": "murphy.mdm.brm.murphybusinessrule.view",
+				"controlAggregation": "pages",
+				"controlId": "app",
+				"clearControlAggregation": false
+			},
+			"routes": [{
+				"name": "Dashboard",
+				"pattern": "",
+				"target": [
+					"Dashboard"
+				]
+			}],
+			"targets": {
+
+				"Dashboard": {
+					"viewType": "XML",
+					"viewName": "Dashboard"
+				}
+			}
+		}
+	},
+	"sap.platform.hcp": {
+		"uri": "webapp",
+		"_version": "1.1.0"
+	}
+}
