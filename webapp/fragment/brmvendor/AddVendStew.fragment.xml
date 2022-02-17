@@ -1,7 +1,7 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
 	xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
 	<!--	<Dialog title="{= ${BRMVendor>/Edit} ? Update Stage Approver: Add Stage Approver}" class="sapUiSizeCompact">-->
-	<Dialog title="Add Stage Approver" class="sapUiSizeCompact">
+	<Dialog title="Edit Stage Approver" contentWidth="40%" draggable="false" class="sapUiSizeCompact">
 		<content>
 			<VBox class="sapUiSmallMargin">
 				<f:Form editable="true" width="100%">
@@ -14,39 +14,24 @@
 							<f:formElements>
 								<f:FormElement >
 									<f:label>
-										<Label text="Type of user"/>
+										<Label text="ATTRIBUTE"/>
 									</f:label>
-									<Select selectedKey="{BRMVendor>/usertype}">
-										<items>
-											<core:Item key="001" text="Requester"/>
-											<core:Item key="002" text="Approver"/>
-											<core:Item key="003" text="Steward"/>
-										</items>
-									</Select>
+									<Input editable="false" value="{VendrStewApprov>/value}"></Input>
 								</f:FormElement>
 								<f:FormElement>
 									<f:label>
-										<Label text="Attribute"/>
+										<Label text="VALUE"/>
 									</f:label>
-									<Select forceSelection="false" selectedKey="{BRMVendor>/attribute}">
-										<items>
-											<core:Item key="001" text="US+VEND"/>
-											<core:Item key="002" text="US+OA01"/>
-											<core:Item key="003" text="US+INVP"/>
-										</items>
-									</Select>
-								</f:FormElement>
-								<f:FormElement >
-									<f:label>
-										<Label text="Stage Approver" required="true"/>
-									</f:label>
-									<Input value="{BRMVendor>/stageapprover}" maxLength="40"/>
+									<Input editable="false" value="{VendrStewApprov>/attributeName}"></Input>
 								</f:FormElement>
 								<f:FormElement>
 									<f:label>
-										<Label text="Value"/>
+										<Label text="STAGE APPROVER"/>
 									</f:label>
-									<Input value="{BRMVendor>/value}" maxLength="40"/>
+									<!--	<Input value="{BRMVendor>/value}" maxLength="40"/>-->
+									<MultiComboBox selectedKeys="{VendrStewApprov>/approver}" items="{path:'BRMMaster>/FilterVendorStewardData'}">
+										<core:Item text="{BRMMaster>name}" key="{BRMMaster>key}"/>
+									</MultiComboBox>
 								</f:FormElement>
 							</f:formElements>
 						</f:FormContainer>
@@ -55,11 +40,11 @@
 			</VBox>
 		</content>
 		<beginButton>
-		<!--	<Button text="{= ${BRMVendor>/Edit} ? Update : Create}" type="Accept" press="onSaveCustContacts"/>-->
-			<Button text="Create" type="Accept" press="onSaveCustContacts"/>
+			<!--	<Button text="{= ${BRMVendor>/Edit} ? Update : Create}" type="Accept" press="onSaveCustContacts"/>-->
+			<Button text="Update" type="Accept" press="onSaveVendSteward"/>
 		</beginButton>
 		<endButton>
-			<Button text="Cancel" type="Reject" press="oncloseCustContacts"/>
+			<Button text="Cancel" type="Reject" press="onCloseVendSteward"/>
 		</endButton>
 	</Dialog>
 </core:FragmentDefinition>

@@ -1,52 +1,110 @@
 {
-	"VendorsBRMData": [{
-			"attribute": "US+VEND",
-			"value": "Country code account",
-			"stageapprover": "Krishna Chaitanya",
-			"usertype": "Requester"
+	"objVENDOR_STEWARD_APPROVER": {
+		"processDetail": {
+			"processName": "MDGVendorWorkflow",
+			"processDisplayName": "MDGVendorWorkflow",
+			"processType": 1,
+			"slaDays": 3,
+			"slaHours": 0,
+			"color": null,
+			"description": null,
+			"labelName": "MDGVendorWorkflow",
+			"origin": "Ad-hoc",
+			"processRequestId": "M11",
+			"sla": "72",
+			"subject": null,
+			"criticalDate": "24",
+			"criticalDateDays": 1,
+			"criticalDateHours": 0,
+			"url": null,
+			"validForUsage": null
+		},
+		"customAttribute": [],
+		"teamDetailDto": [{
+			"processName": "MDGVendorWorkflow",
+			"group": [],
+			"eventName": "ApproverTask",
+			"templateId": "84i4ida63b13b",
+			"individual": [],
+			"taskType": "Approve/Reject",
+			"runTimeUser": 0,
+			"customKey": null,
+			"customAttributes": [],
+			"sourceId": ["cci209315690c"],
+			"targetId": [""],
+			"subject": "Approver Task",
+			"description": "Approver Task",
+			"isEdited": 0,
+			"url": null,
+			"rules": [],
+			"ownerSelectionRules": [],
+			"taskNature": "User Based",
+			"statusDto": {
+				"ready": "Ready",
+				"reserved": "Reserved",
+				"completed": "Completed",
+				"resolved": "Resolved",
+				"approve": "Approved",
+				"reject": "Rejected",
+				"done": "Done"
+			},
+			"ownerSequenceType": {
+				"ownerSequType": "Group",
+				"attrTypeId": "",
+				"attrTypeName": "",
+				"orderBy": "ASC"
+			},
+			"customattrTypes": null
 		}, {
-			"attribute": "US+VEND",
-			"value": "Country code account",
-			"stageapprover": "Anish",
-			"usertype": "Requester"
-		}, {
-			"attribute": "US+VEND",
-			"value": "Country code account",
-			"stageapprover": "Santhosh",
-			"usertype": "Requester"
-		}, {
-			"attribute": "US+OA01",
-			"value": "Country code account",
-			"stageapprover": "Ravi",
-			"usertype": "Approver"
-		}, {
-			"attribute": "US+OA01",
-			"value": "Country code account",
-			"stageapprover": "Isai",
-			"usertype": "Approver"
-		}, {
-			"attribute": "US+INVP",
-			"value": "Country code account",
-			"stageapprover": "Sanjay",
-			"usertype": "Steward"
+			"processName": "MDGVendorWorkflow",
+			"group": [],
+			"eventName": "Steward Task",
+			"templateId": "cci209315690c",
+			"individual": [],
+			"taskType": "Approve/Reject",
+			"runTimeUser": 0,
+			"customKey": null,
+			"customAttributes": [],
+			"sourceId": [""],
+			"targetId": ["84i4ida63b13b"],
+			"subject": "Steward Approval",
+			"description": "Steward Approval",
+			"isEdited": 0,
+			"url": null,
+			"rules": [],
+			"ownerSelectionRules": [],
+			"taskNature": "User Based",
+			"statusDto": {
+				"ready": "Ready",
+				"reserved": "Reserved",
+				"completed": "Completed",
+				"resolved": "Resolved",
+				"approve": "Approved",
+				"reject": "Rejected",
+				"done": "Done"
+			},
+			"ownerSequenceType": {
+				"ownerSequType": "Group",
+				"attrTypeId": "",
+				"attrTypeName": "",
+				"orderBy": "ASC"
+			},
+			"customattrTypes": null
+		}],
+		"responseMessage": {
+			"status": "SUCCESS",
+			"statusCode": "0",
+			"message": "SUCCESS",
+			"taskId": null,
+			"processId": null,
+			"countryCode": null,
+			"accountGroup": null,
+			"dataDomain": null,
+			"isLastApprover": null,
+			"assignment": null,
+			"previousAssignment": null,
+			"statusReport": null,
+			"statusReportMonthly": null
 		}
-
-	],
-	"VENDOR_REQUESTOR": [{
-		"user": "Sanjay",
-		"emailid": "sanjay@gmail.com",
-		"pid": "PID1",
-		"acgroup": "AC Group 1"
-	}, {
-		"user": "Praveen",
-		"emailid": "praveen@gmail.com",
-		"pid": "PID2",
-		"acgroup": "AC Group 2"
-	}, {
-		"user": "Ravi",
-		"emailid": "ravi@gmail.com",
-		"pid": "PID3",
-		"acgroup": "AC Group 3"
-	}]
-
+	}
 }

@@ -10,7 +10,7 @@
 							<uxap:ObjectPageSubSection title="" titleUppercase="false" id="idVendorSection">
 								<uxap:blocks>
 									<uxap:ObjectPageLazyLoader stashed="true" id="idVendorDataBlock">
-										<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.Vendor" type="XML"/>
+										<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmvendor.Vendor" type="XML"/>
 									</uxap:ObjectPageLazyLoader>
 								</uxap:blocks>
 							</uxap:ObjectPageSubSection>
@@ -31,7 +31,7 @@
 			</uxap:ObjectPageLayout>
 		</content>
 		<footer>
-		<!--	<OverflowToolbar >
+			<!--	<OverflowToolbar >
 				<Button text="Cancel" icon="sap-icon://cancel" type="Reject" press="onCancelCoc" custData:status="090"/>
 				<ToolbarSpacer/>
 				<Button type="Emphasized" text="Ok" icon="sap-icon://cart-approval" press="onUpdateStatus" custData:status="030"/>

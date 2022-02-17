@@ -3,13 +3,15 @@ sap.ui.define([
 	"sap/ui/core/Fragment",
 	"murphy/mdm/brm/murphybusinessrule/shared/serviceCall",
 	"sap/m/MessageToast",
-	"sap/m/MessageBox"
-], function (BaseController, Fragment, ServiceCall, MessageToast, MessageBox) {
+	"sap/m/MessageBox",
+	"sap/ui/model/json/JSONModel"
+], function (BaseController, Fragment, ServiceCall, MessageToast, MessageBox, JSONModel) {
 	"use strict";
 
 	return BaseController.extend("murphy.mdm.brm.murphybusinessrule.controller.Dashboard", {
 		constructor: function () {
 			this.serviceCall = new ServiceCall();
+
 		},
 		/**
 		 * Called when a controller is instantiated and its View controls (if available) are already created.
@@ -17,9 +19,158 @@ sap.ui.define([
 		 * @memberOf murphy.mdm.brm.murphybusinessrule.view.Dashboard
 		 */
 		onInit: function () {
-
 			this.byId("idDashboardObjectPage").setSelectedSection("idVndr");
+			this.getView().setBusy(true);
+			this.vendorUserlist();
 		},
+		vendorUserlist: function () {
+			var url = "/MurphyCloudIdPDest/service/scim/Users";
+			this.paginated_fetch(url).then(function (oData) {
+				var oResult = oData;
+				var aVendReq = [];
+				var aVendApprov = [];
+				var aVendSteward = [];
+				for (var i = 0; i < oResult.length; i++) {
+					var aGroups = oResult[i].groups;
+					var oDataObj = oResult[i];
+					/*	var resultObject = this.searchValue(aGroups, oDataObj);
+					aVendReq.push(resultObject);
+*/
+					if (oResult[i].groups !== undefined) {
+						for (var j = 0; j < aGroups.length; j++) {
+							if (aGroups[j].value.search("DA_MDM_VEND_REQ") === 0) {
+								aVendReq.push(oDataObj);
+							} else if (aGroups[j].value.search("DA_MDM_VEND_APPROV") === 0) {
+								var name = oDataObj.name.givenName + ' ' + oDataObj.name.familyName;
+								var email = oDataObj.emails[0].value.toUpperCase();
+								aVendApprov.push({
+									'name': name,
+									'key': email
+								});
+							} else if (aGroups[j].value.search("DA_MDM_VEND_STEW") === 0) {
+								var name = oDataObj.name.givenName + ' ' + oDataObj.name.familyName;
+								var email = oDataObj.emails[0].value.toUpperCase();
+
+								aVendSteward.push({
+									'name': name,
+									'key': email
+								});
+							}
+						}
+					}
+
+					/*	var jsonObject = books.map(JSON.stringify);
+						var uniqueSet = new Set(jsonObject);
+						var uniqueArray = Array.from(uniqueSet).map(JSON.parse);*/
+
+					/*oObj.groups.find(function (post) {
+						if (post.value.search("DA_MDM_VEND_REQ") == 0) {
+							aVendReq.push(oObj);
+						}
+
+					});*/
+				}
+
+				//////////Removeing duplicates in array
+				var aVendorReqData = Object.values(aVendReq.reduce((acc, cur) => Object.assign(acc, {
+					[cur.id]: cur
+				}), {}));
+				////End
+				this.getView().getModel("BRMMaster").setProperty("/FilterVendorReqData", aVendorReqData);
+				this.getView().getModel("App").setProperty("/Vendor/requestorCount", aVendorReqData.length);
+
+				var aVendorApprvData = Object.values(aVendApprov.reduce((acc, cur) => Object.assign(acc, {
+					[cur.key]: cur
+				}), {}));
+				this.getView().getModel("BRMMaster").setProperty("/FilterVendorApproverData", aVendorApprvData);
+
+				//////////Removeing duplicates in array
+				var aVendorStewardData = Object.values(aVendSteward.reduce((acc, cur) => Object.assign(acc, {
+					[cur.key]: cur
+				}), {}));
+				this.getView().getModel("BRMMaster").setProperty("/FilterVendorStewardData", aVendorStewardData);
+				////////////
+				this.getStewardApproverData();
+			}.bind(this));
+		},
+		getStewardApproverData: function () {
+			$.ajax({
+				url: '/MDM_WORKBOX_DEST/customProcess/getAttributes/MDGVendorWorkflow?processType=Ad-hoc&_=1644482799078',
+				type: 'GET',
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				Asynch: false,
+				success: function (data, textStatus) {
+					console.log(data);
+					var oResult = data;
+					this.getView().getModel("MDGVendorWorkflow").setData(oResult);
+					var mdgVendSteward = [];
+					var msdgVendApprover = []
+					oResult.teamDetailDto.find(function (post) {
+						if (post.eventName == "Steward Task") {
+							mdgVendSteward.push(post);
+						} else if (post.eventName == "ApproverTask") {
+							msdgVendApprover.push(post);
+						}
+					})
+					this.getView().getModel("BRMMaster").setProperty("/oMDGStewardData", mdgVendSteward[0]);
+					this.getView().getModel("BRMMaster").setProperty("/aFilterMDGStewardData", mdgVendSteward[0].ownerSelectionRules.reverse());
+					this.getView().getModel("App").setProperty("/Vendor/VendStewCount", mdgVendSteward[0].ownerSelectionRules.length);
+
+					this.getView().getModel("BRMMaster").setProperty("/oMDGApproverData", msdgVendApprover[0]);
+					this.getView().getModel("BRMMaster").setProperty("/aFilterMDGApproverData", msdgVendApprover[0].ownerSelectionRules.reverse());
+					this.getView().getModel("App").setProperty("/Vendor/VendApproverCount", msdgVendApprover[0].ownerSelectionRules.length);
+					this.getView().setBusy(false);
+				}.bind(this),
+				error: function (jqXHR, tranStatus) {
+					this.getView().setBusy(false);
+				}
+			});
+		},
+		onVendorReqdetails: function (oEvent) {
+			var oSource = oEvent.getSource();
+			var aGroups = oSource.getBindingContext("BRMMaster").getProperty("groups");
+			this.getView().getModel("BRMMaster").setProperty("/VendorACGroupdData", aGroups);
+			var oView = this.getView();
+			// create popover
+			if (!this._pPopover) {
+				this._pPopover = Fragment.load({
+					id: oView.getId(),
+					name: "murphy.mdm.brm.murphybusinessrule.fragment.brmvendor.VendorACgroup",
+					controller: this
+				}).then(function (oPopover) {
+					oView.addDependent(oPopover);
+					oPopover.bindElement("/aGroups");
+					return oPopover;
+				});
+			}
+			this._pPopover.then(function (oPopover) {
+				oPopover.openBy(oSource);
+			});
+
+		},
+		handleCloseVendorACgrp: function () {
+			this.getView().byId("myPopover").close();
+		},
+
+		paginated_fetch: function (
+			url = is_required("url"), // Improvised required argument in JS
+			page = 1,
+			previousResponse = []
+		) {
+			return fetch(`${url}?startIndex=${page}`) // Append the page number to the base URL
+				.then(response => response.json())
+				.then(newResponse => {
+					const response = [...previousResponse, ...newResponse.Resources]; // Combine the two arrays
+					if (newResponse.Resources.length !== 0) {
+						var page = response.length;
+						page++;
+						return this.paginated_fetch(url, page, response);
+					}
+					return response;
+				});
+		},
+
 		onVendorFilterSelect: function (oEvent) {
 			var sKey = oEvent.getParameter("key");
 			if (sKey === "vendReq") {
@@ -36,9 +187,9 @@ sap.ui.define([
 				this.getView().getModel("App").setProperty("/Vendor/approver", true);
 			}
 		},
-		addEditVendor: function () {
+		addEditVendor: function (oEvent) {
 			this.emptyVendorObject();
-			this.loadAddEditVendor();
+			this.loadAddEditVendor(oEvent);
 		},
 		emptyVendorObject: function () {
 			this.getView().getModel("BRMVendor").setData({
@@ -50,32 +201,113 @@ sap.ui.define([
 			});
 		},
 		onVendorDetails: function (oEvent) {
-			var oVendor = oEvent.getSource().getBindingContext().getObject();
-			oVendor.Edit = true;
-			this.getView().getModel("BRMVendor").setData(oVendor);
-			this.loadAddEditVendor();
+			var oVendor = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			this.getView().getModel("VendrStewApprov").setData(oVendor);
+			this.loadAddEditVendor(oEvent);
 		},
 		loadAddEditVendor: function (oEvent) {
-			var oButton = oEvent.getSource(),
-				oView = this.getView();
-			// create popover
-			if (!this._pPopover) {
-				this._pPopover = Fragment.load({
+			var oView = this.getView();
+			if (!this._pValueHelpDialog) {
+				this._pValueHelpDialog = Fragment.load({
 					id: oView.getId(),
-					name: "murphy.mdm.brm.murphybusinessrule.fragment.AddEditVendor",
+					name: "murphy.mdm.brm.murphybusinessrule.fragment.brmvendor.AddVendStew",
 					controller: this
-				}).then(function (oPopover) {
-					oView.addDependent(oPopover);
-					return oPopover;
+				}).then(function (oValueHelpDialog) {
+					oView.addDependent(oValueHelpDialog);
+					return oValueHelpDialog;
 				});
 			}
-			this._pPopover.then(function (oPopover) {
-				oPopover.open(oButton);
-			});
+			this._pValueHelpDialog.then(function (oValueHelpDialog) {
+				oValueHelpDialog.open();
+			}.bind(this));
 
 		},
-		oncloseShipngInvoic: function () {
-				this._pPopover.close();
+		onCloseVendSteward: function (oEvent) {
+			this.getView().setBusy(true);
+			this.getStewardApproverData();
+			this._pValueHelpDialog.then(function (oValueHelpDialog) {
+				oValueHelpDialog.close();
+			}.bind(this));
+		},
+
+		onSaveSteward: function () {
+			this.getView().getModel("BRMMaster").getProperty("/oMDGStewardData");
+			this.getView().getModel("VendrStewApprov").getData();
+		},
+		onVendorApproverDetails: function (oEvent) {
+			var oVendor = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			this.getView().getModel("VendrStewApprov").setData(oVendor);
+			this.loadAddEditVendorApprovr(oEvent);
+		},
+		loadAddEditVendorApprovr: function (oEvent) {
+			var oView = this.getView();
+			if (!this._oDialogVendApprov) {
+				this._oDialogVendApprov = Fragment.load({
+					id: oView.getId(),
+					name: "murphy.mdm.brm.murphybusinessrule.fragment.brmvendor.AddVendApprover",
+					controller: this
+				}).then(function (oVendApprovDialog) {
+					oView.addDependent(oVendApprovDialog);
+					return oVendApprovDialog;
+				});
+			}
+			this._oDialogVendApprov.then(function (oVendApprovDialog) {
+				oVendApprovDialog.open();
+			}.bind(this));
+
+		},
+		onCloseVendApprover: function (oEvent) {
+			this.getView().setBusy(true);
+			this.getStewardApproverData();
+			this._oDialogVendApprov.then(function (oVendApprovDialog) {
+				oVendApprovDialog.close();
+			}.bind(this));
+		},
+		onSaveVendSteward: function () {
+			this.getView().setBusy(true);
+			var oResult = this.getView().getModel("BRMMaster").getProperty("/oMDGApproverData");
+			var oSelRoule = this.getView().getModel("VendrStewApprov").getData();
+			var oMDGVend = this.getView().getModel("MDGVendorWorkflow").getData();
+			var objParamCreate = {
+				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
+				type: 'POST',
+				hasPayload: true,
+				data: oMDGVend
+			};
+			this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
+				this.onCloseVendSteward();
+			}.bind(this));
+		},
+		onSaveVendApprover: function () {
+				this.getView().setBusy(true);
+				var oResult = this.getView().getModel("BRMMaster").getProperty("/oMDGApproverData");
+				var oSelRoule = this.getView().getModel("VendrStewApprov").getData();
+				var oMDGVend = this.getView().getModel("MDGVendorWorkflow").getData();
+				var objParamCreate = {
+					url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
+					type: 'POST',
+					hasPayload: true,
+					data: oMDGVend
+				};
+				this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
+					this.onCloseVendApprover();
+				}.bind(this));
+
+				/*	var aOwnerSelectionRules = [];
+					oMDGVend.teamDetailDto.find(function (post) {
+						if (post.eventName == "ApproverTask") {
+							//	msdgVendApprover.push(post);post.ownerSelectionRules
+							post.ownerSelectionRules.find(function (post2) {
+								if (oSelRoule.value === post2.value) {
+									aOwnerSelectionRules.push(oSelRoule);
+								} else {
+									aOwnerSelectionRules.push(post2);
+
+								}
+							})
+						}
+					});*/
+
 			}
 			/**
 			 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered

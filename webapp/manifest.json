@@ -17,7 +17,12 @@
 			"BRMJSONDATA": {
 				"uri": "model/brmjsonFile.json",
 				"type": "JSON"
+			},
+			"murphyVendor": {
+				"uri": "/MDM_WORKBOX_DEST",
+				"type": "OData"
 			}
+
 		}
 	},
 	"sap.ui": {
@@ -72,6 +77,15 @@
 			},
 			"BRMVendor": {
 				"type": "sap.ui.model.json.JSONModel"
+			},
+			"VendrStewApprov": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"MDGVendorWorkflow": {
+				"type": "sap.ui.model.json.JSONModel",
+				"settings": {
+					"defaultBindingMode": "OneTime"
+				}
 			},
 			"App": {
 				"type": "sap.ui.model.json.JSONModel"
