@@ -28,7 +28,7 @@ sap.ui.define([
 			this.vendorUserlist();
 		},
 		vendorUserlist: function () {
-			var url = "/sap/fiori/MurphyCloudIdPDest/service/scim/Users";
+			var url = "/sap/fiori/murphybusinessrule/MurphyCloudIdPDest/service/scim/Users";
 				//var url = "/murphybusinessrule/MurphyCloudIdPDest/service/scim/Users";
 			this.paginated_fetch(url).then(function (oData) {
 				var oResult = oData;
@@ -100,7 +100,7 @@ sap.ui.define([
 		},
 		getStewardApproverData: function () {
 			$.ajax({
-				url: '/sap/fiori/MDM_WORKBOX_DEST/customProcess/getAttributes/MDGVendorWorkflow?processType=Ad-hoc&_=1644482799078',
+				url: '/sap/fiori/murphybusinessrule/MDM_WORKBOX_DEST/customProcess/getAttributes/MDGVendorWorkflow?processType=Ad-hoc&_=1644482799078',
 				type: 'GET',
 				contentType: "application/json; charset=utf-8",
 				dataType: "json",
