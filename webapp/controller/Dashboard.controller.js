@@ -4,8 +4,12 @@ sap.ui.define([
 	"murphy/mdm/brm/murphybusinessrule/shared/serviceCall",
 	"sap/m/MessageToast",
 	"sap/m/MessageBox",
-	"sap/ui/model/json/JSONModel"
-], function (BaseController, Fragment, ServiceCall, MessageToast, MessageBox, JSONModel) {
+	"sap/ui/model/json/JSONModel",
+	"sap/ui/model/Filter",
+	"sap/ui/model/FilterOperator",
+	"sap/ui/model/FilterType",
+	'sap/ui/model/Sorter',
+], function (BaseController, Fragment, ServiceCall, MessageToast, MessageBox, JSONModel, Filter, FilterOperator, FilterType, Sorter) {
 	"use strict";
 
 	return BaseController.extend("murphy.mdm.brm.murphybusinessrule.controller.Dashboard", {
@@ -24,7 +28,8 @@ sap.ui.define([
 			this.vendorUserlist();
 		},
 		vendorUserlist: function () {
-			var url = "/MurphyCloudIdPDest/service/scim/Users";
+			var url = "/sap/fiori/MurphyCloudIdPDest/service/scim/Users";
+				//var url = "/murphybusinessrule/MurphyCloudIdPDest/service/scim/Users";
 			this.paginated_fetch(url).then(function (oData) {
 				var oResult = oData;
 				var aVendReq = [];
@@ -95,24 +100,26 @@ sap.ui.define([
 		},
 		getStewardApproverData: function () {
 			$.ajax({
-				url: '/MDM_WORKBOX_DEST/customProcess/getAttributes/MDGVendorWorkflow?processType=Ad-hoc&_=1644482799078',
+				url: '/sap/fiori/MDM_WORKBOX_DEST/customProcess/getAttributes/MDGVendorWorkflow?processType=Ad-hoc&_=1644482799078',
 				type: 'GET',
 				contentType: "application/json; charset=utf-8",
 				dataType: "json",
 				Asynch: false,
 				success: function (data, textStatus) {
-					console.log(data);
 					var oResult = data;
 					this.getView().getModel("MDGVendorWorkflow").setData(oResult);
-					var mdgVendSteward = [];
-					var msdgVendApprover = []
-					oResult.teamDetailDto.find(function (post) {
-						if (post.eventName == "Steward Task") {
-							mdgVendSteward.push(post);
-						} else if (post.eventName == "ApproverTask") {
-							msdgVendApprover.push(post);
-						}
-					})
+					/*	var mdgVendSteward = [];
+						var msdgVendApprover = []
+						oResult.teamDetailDto.find(function (post) {
+							if (post.eventName == "Steward Task") {
+								mdgVendSteward.push(post);
+							} else if (post.eventName == "ApproverTask") {
+								msdgVendApprover.push(post);
+							}
+						})*/
+					var mdgVendSteward = oResult.teamDetailDto.filter(role => role.eventName === "Steward Task");
+					var msdgVendApprover = oResult.teamDetailDto.filter(role => role.eventName === "ApproverTask");
+
 					this.getView().getModel("BRMMaster").setProperty("/oMDGStewardData", mdgVendSteward[0]);
 					this.getView().getModel("BRMMaster").setProperty("/aFilterMDGStewardData", mdgVendSteward[0].ownerSelectionRules.reverse());
 					this.getView().getModel("App").setProperty("/Vendor/VendStewCount", mdgVendSteward[0].ownerSelectionRules.length);
@@ -130,7 +137,9 @@ sap.ui.define([
 		onVendorReqdetails: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var aGroups = oSource.getBindingContext("BRMMaster").getProperty("groups");
-			this.getView().getModel("BRMMaster").setProperty("/VendorACGroupdData", aGroups);
+
+			var aFilterGrp = aGroups.filter(role => role.value.search("DA_MDM_VEND_REQ") === 0);
+			this.getView().getModel("BRMMaster").setProperty("/VendorACGroupdData", aFilterGrp);
 			var oView = this.getView();
 			// create popover
 			if (!this._pPopover) {
@@ -163,9 +172,9 @@ sap.ui.define([
 				.then(newResponse => {
 					const response = [...previousResponse, ...newResponse.Resources]; // Combine the two arrays
 					if (newResponse.Resources.length !== 0) {
-						var page = response.length;
-						page++;
-						return this.paginated_fetch(url, page, response);
+						var pages = response.length;
+						pages++;
+						return this.paginated_fetch(url, pages, response);
 					}
 					return response;
 				});
@@ -279,36 +288,88 @@ sap.ui.define([
 			}.bind(this));
 		},
 		onSaveVendApprover: function () {
-				this.getView().setBusy(true);
-				var oResult = this.getView().getModel("BRMMaster").getProperty("/oMDGApproverData");
-				var oSelRoule = this.getView().getModel("VendrStewApprov").getData();
-				var oMDGVend = this.getView().getModel("MDGVendorWorkflow").getData();
-				var objParamCreate = {
-					url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
-					type: 'POST',
-					hasPayload: true,
-					data: oMDGVend
-				};
-				this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
-					this.onCloseVendApprover();
-				}.bind(this));
+			this.getView().setBusy(true);
+			var oResult = this.getView().getModel("BRMMaster").getProperty("/oMDGApproverData");
+			var oSelRoule = this.getView().getModel("VendrStewApprov").getData();
+			var oMDGVend = this.getView().getModel("MDGVendorWorkflow").getData();
+			var objParamCreate = {
+				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
+				type: 'POST',
+				hasPayload: true,
+				data: oMDGVend
+			};
+			this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
+				this.onCloseVendApprover();
+			}.bind(this));
 
-				/*	var aOwnerSelectionRules = [];
-					oMDGVend.teamDetailDto.find(function (post) {
-						if (post.eventName == "ApproverTask") {
-							//	msdgVendApprover.push(post);post.ownerSelectionRules
-							post.ownerSelectionRules.find(function (post2) {
-								if (oSelRoule.value === post2.value) {
-									aOwnerSelectionRules.push(oSelRoule);
-								} else {
-									aOwnerSelectionRules.push(post2);
+			/*	var aOwnerSelectionRules = [];
+				oMDGVend.teamDetailDto.find(function (post) {
+					if (post.eventName == "ApproverTask") {
+						//	msdgVendApprover.push(post);post.ownerSelectionRules
+						post.ownerSelectionRules.find(function (post2) {
+							if (oSelRoule.value === post2.value) {
+								aOwnerSelectionRules.push(oSelRoule);
+							} else {
+								aOwnerSelectionRules.push(post2);
 
-								}
-							})
-						}
-					});*/
+							}
+						})
+					}
+				});*/
 
+		},
+		onVendReqTableSearch: function (event) {
+			/*	var oTableSearchState = [],
+					sQuery = oEvent.getSource().getValue();
+
+				if (sQuery && sQuery.length > 0) {
+					oTableSearchState.push(new Filter("name/givenName", FilterOperator.Contains, sQuery));
+					oTableSearchState.push(new Filter("name/familyName", FilterOperator.Contains, sQuery));
+				}
+				this.getView().byId("idVendReqTbl").getBinding("items").filter(oTableSearchState, "Application");*/
+			var query = event.getParameter("query");
+			this.getView().byId("idVendReqTbl").getBinding("items").filter(new Filter({
+				filters: [
+					new Filter({
+						filters: [
+							new Filter({
+								path: "name/givenName",
+								operator: FilterOperator.Contains,
+								value1: query,
+								caseSensitive: false,
+							}),
+							new Filter({
+								path: "name/familyName",
+								operator: FilterOperator.Contains,
+								value1: query,
+								caseSensitive: false,
+							}),
+						],
+						and: false,
+					})
+				],
+				and: true,
+			}), FilterType.Application);
+		},
+		onVendStewrdTableSearch: function (oEvent) {
+			var oTableSearchState = [],
+				sQuery = oEvent.getSource().getValue();
+			if (sQuery && sQuery.length > 0) {
+				oTableSearchState.push(new Filter("value", FilterOperator.Contains, sQuery));
 			}
+			this.getView().byId("idVendStewrdTbl").getBinding("items").filter(oTableSearchState, "Application");
+		},
+		onVendApprovTableSearch: function (oEvent) {
+				var oTableSearchState = [],
+					sQuery = oEvent.getSource().getValue();
+				if (sQuery && sQuery.length > 0) {
+					oTableSearchState.push(new Filter("value", FilterOperator.Contains, sQuery));
+				}
+				this.getView().byId("idVendApprovTbl").getBinding("items").filter(oTableSearchState, "Application");
+			}
+			/*	onNavtoNotFound: function () {
+						this.getOwnerComponent().getRouter().getTargets().display("notFound");
+					}*/
 			/**
 			 * Similar to onAfterRendering, but this hook is invoked before the controller's View is re-rendered
 			 * (NOT before the first rendering! onInit() is used for that one!).

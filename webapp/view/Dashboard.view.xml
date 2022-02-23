@@ -1,9 +1,9 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:uxap="sap.uxap" xmlns:l="sap.ui.layout" xmlns:f="sap.f"
 	xmlns:suite="sap.suite.ui.commons" controllerName="murphy.mdm.brm.murphybusinessrule.controller.Dashboard"
 	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-	<Page title="Title" showHeader="false" showFooter="true">
-		<content>
-			<uxap:ObjectPageLayout id="idDashboardObjectPage" upperCaseAnchorBar="false" useIconTabBar="true">
+<!--	<Page title="Title" showHeader="false" showFooter="true">
+		<content>-->
+			<uxap:ObjectPageLayout id="idDashboardObjectPage" upperCaseAnchorBar="false" useIconTabBar="true" preserveHeaderStateOnScroll="true">
 				<uxap:sections>
 					<uxap:ObjectPageSection id="idVndr" title="Vendor" titleUppercase="false">
 						<uxap:subSections>
@@ -29,13 +29,13 @@
 					</uxap:ObjectPageSection>
 				</uxap:sections>
 			</uxap:ObjectPageLayout>
-		</content>
-		<footer>
+		<!--</content>
+		<footer>-->
 			<!--	<OverflowToolbar >
 				<Button text="Cancel" icon="sap-icon://cancel" type="Reject" press="onCancelCoc" custData:status="090"/>
 				<ToolbarSpacer/>
 				<Button type="Emphasized" text="Ok" icon="sap-icon://cart-approval" press="onUpdateStatus" custData:status="030"/>
 			</OverflowToolbar>-->
-		</footer>
-	</Page>
+	<!--	</footer>
+	</Page>-->
 </mvc:View>

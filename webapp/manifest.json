@@ -11,7 +11,7 @@
 		"description": "{{appDescription}}",
 		"sourceTemplate": {
 			"id": "ui5template.basicSAPUI5ApplicationProject",
-			"version": "1.38.11"
+			"version": "1.40.12"
 		},
 		"dataSources": {
 			"BRMJSONDATA": {
@@ -22,7 +22,6 @@
 				"uri": "/MDM_WORKBOX_DEST",
 				"type": "OData"
 			}
-
 		}
 	},
 	"sap.ui": {
@@ -39,7 +38,8 @@
 			"desktop": true,
 			"tablet": true,
 			"phone": true
-		}
+		},
+		"fullWidth": true
 	},
 	"sap.ui5": {
 		"flexEnabled": false,
@@ -50,7 +50,7 @@
 			"id": "App"
 		},
 		"dependencies": {
-			"minUI5Version": "1.65.6",
+			"minUI5Version": "1.60.38",
 			"libs": {
 				"sap.ui.layout": {},
 				"sap.ui.core": {},
@@ -92,9 +92,11 @@
 			}
 		},
 		"resources": {
-			"css": [{
-				"uri": "css/style.css"
-			}]
+			"css": [
+				{
+					"uri": "css/style.css"
+				}
+			]
 		},
 		"routing": {
 			"config": {
@@ -104,20 +106,28 @@
 				"viewPath": "murphy.mdm.brm.murphybusinessrule.view",
 				"controlAggregation": "pages",
 				"controlId": "app",
-				"clearControlAggregation": false
+				"clearControlAggregation": false,
+				"bypassed": {
+					"target": "notFound"
+				}
 			},
-			"routes": [{
-				"name": "Dashboard",
-				"pattern": "",
-				"target": [
-					"Dashboard"
-				]
-			}],
+			"routes": [
+				{
+					"name": "Dashboard",
+					"pattern": "",
+					"target": [
+						"Dashboard"
+					]
+				}
+			],
 			"targets": {
-
 				"Dashboard": {
 					"viewType": "XML",
 					"viewName": "Dashboard"
+				},
+				"notFound": {
+					"viewType": "XML",
+					"viewName": "NotFound"
 				}
 			}
 		}

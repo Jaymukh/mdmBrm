@@ -1,118 +1,105 @@
 <core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:uxap="sap.uxap" xmlns:l="sap.ui.layout"
 	xmlns:f="sap.f" xmlns:suite="sap.suite.ui.commons" xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
 	xmlns:html="http://www.w3.org/1999/xhtml">
-	<IconTabBar id="idIconTabBar" select=".onVendorFilterSelect" class="sapUiResponsiveContentPadding">
+	<IconTabBar id="idIconTabBar" headerMode="Inline" select=".onVendorFilterSelect" class="sapUiResponsiveContentPadding">
 		<items>
-			<IconTabFilter icon="sap-icon://add-employee" iconColor="Positive" design="Horizontal" count="{App>/Vendor/requestorCount}"
-				text="Requestors" key="vendReq">
-				<ScrollContainer height="100%" width="100%" horizontal="false" vertical="true">
-					<Table visible="{App>/Vendor/requestor}" sticky="ColumnHeaders,HeaderToolbar" inset="false" growing="true"
-						items="{path:'BRMMaster>/FilterVendorReqData'}" class="sapFDynamicPageAlignContent" width="auto">
-						<headerToolbar>
-							<!--<OverflowToolbar>
-						<ToolbarSpacer/>
-						<Button text="Add Stage Approver" icon="sap-icon://add" type="Transparent" press="addEditVendor"></Button>
-						<Button icon="sap-icon://delete" type="Reject" press="handleCreateERPVendor"></Button>
-					</OverflowToolbar>-->
-						</headerToolbar>
-						<columns>
-							<Column mergeDuplicates="true">
-								<header>
-									<Text text="USERS"/>
-								</header>
-							</Column>
-							<Column hAlign="Center">
-								<header>
-									<Text text="EMAIL ID"/>
-								</header>
-							</Column>
-							<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
-								<header>
-									<Text text="PID"/>
-								</header>
-							</Column>
-							<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Left">
-								<header>
-									<Text text="ACCOUNT GROUPS"/>
-								</header>
-							</Column>
-							<Column minScreenWidth="Tablet" demandPopin="true">
-								<header>
-									<Text text=""/>
-								</header>
-							</Column>
-						</columns>
-						<ColumnListItem vAlign="Middle">
-							<Text text="{BRMMaster>name/givenName} {BRMMaster>name/familyName}"/>
-							<Text text="{BRMMaster>emails/0/value}"/>
-							<Text text="{BRMMaster>id}"/>
-							<Text text="{BRMMaster>groups/0/value}"/>
-							<core:Icon src="sap-icon://overflow" color="#1C4C98" press="onVendorReqdetails"></core:Icon>
-						</ColumnListItem>
-					</Table>
-				</ScrollContainer>
-			</IconTabFilter>
-			<IconTabSeparator/>
-			<IconTabFilter icon="sap-icon://employee-lookup" iconColor="Default" design="Horizontal" count="{App>/Vendor/VendStewCount}" text="Steward"
-				key="vendSteward">
-				<ScrollContainer height="100%" width="100%" horizontal="false" vertical="true">
-					<Table visible="{App>/Vendor/steward}" items="{path:'BRMMaster>/aFilterMDGStewardData'}" inset="false" growing="true">
-						<headerToolbar>
-							<!--<OverflowToolbar>
-						<ToolbarSpacer/>
-						<Button text="Add Stage Approver" icon="sap-icon://add" type="Transparent" press="addEditVendor"></Button>
-						<Button icon="sap-icon://delete" type="Reject" press="handleCreateERPVendor"></Button>
-					</OverflowToolbar>-->
-						</headerToolbar>
-						<columns>
-							<Column mergeDuplicates="true">
-								<header>
-									<Text text="ATTRIBUTE"/>
-								</header>
-							</Column>
-							<Column>
-								<header>
-									<Text text="VALUE"/>
-								</header>
-							</Column>
-							<Column minScreenWidth="Tablet" demandPopin="true">
-								<header>
-									<Text text="STAGE APPROVER"/>
-								</header>
-							</Column>
-						</columns>
-						<ColumnListItem vAlign="Middle" type="Detail" detailPress="onVendorDetails">
-							<Text text="{BRMMaster>value}"/>
-							<Text text="{BRMMaster>attributeName}"/>
-							<MultiComboBox editable="false" selectedKeys="{BRMMaster>approver}" items="{path:'BRMMaster>/FilterVendorStewardData'}">
-								<core:Item text="{BRMMaster>name}" key="{BRMMaster>key}"/>
-							</MultiComboBox>
-							<!--<ObjectIdentifier title="{Name}" text="{ProductId}"/>
-				<Text text="{Width} x {Depth} x {Height} {DimUnit}"/>
-				<ObjectNumber number="{WeightMeasure}" unit="{WeightUnit}"
-					state="{ path: 'WeightMeasure', formatter: 'sap.m.sample.TableMergeCells.Formatter.weightState' }"/>
-				<ObjectNumber
-					number="{ parts:[{path:'Price'},{path:'CurrencyCode'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false} }"
-					unit="{CurrencyCode}"/>-->
-						</ColumnListItem>
-					</Table>
-				</ScrollContainer>
-			</IconTabFilter>
-			<IconTabSeparator/>
-			<IconTabFilter icon="sap-icon://employee-approvals" iconColor="Neutral" design="Horizontal" count="{App>/Vendor/VendApproverCount}"
-				text="Approvers" key="vendApprover">
-				<Table visible="{App>/Vendor/approver}" items="{path:'BRMMaster>/aFilterMDGApproverData'}" growing="true">
+			<IconTabFilter count="{App>/Vendor/requestorCount}" text="Requestors" key="vendReq">
+				<!--	<ScrollContainer height="300PX" width="100%" horizontal="false" vertical="true">-->
+				<Table id="idVendReqTbl" visible="{App>/Vendor/requestor}" sticky="ColumnHeaders" inset="false" growing="true"
+					items="{path:'BRMMaster>/FilterVendorReqData'}" class="sapFDynamicPageAlignContent" width="auto">
 					<headerToolbar>
-						<!--<OverflowToolbar>
-						<ToolbarSpacer/>
-						<Button text="Add Stage Approver" icon="sap-icon://add" type="Transparent" press="addEditVendor"></Button>
-						<Button icon="sap-icon://delete" type="Reject" press="handleCreateERPVendor"></Button>
-					</OverflowToolbar>-->
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							<SearchField placeholder="Search by user" search="onVendReqTableSearch" width="17.5rem"/>
+						</OverflowToolbar>
 					</headerToolbar>
 					<columns>
 						<Column mergeDuplicates="true">
 							<header>
-								<Text text="ATTRIBUTE"/>
+								<Text text="USERS"/>
+							</header>
+						</Column>
+						<Column hAlign="Center">
+							<header>
+								<Text text="EMAIL ID"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+							<header>
+								<Text text="PID"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+							<header>
+								<Text text="ACCOUNT GROUPS"/>
+							</header>
+						</Column>
+						<!--	<Column minScreenWidth="Tablet" demandPopin="true">
+								<header>
+									<Text text=""/>
+								</header>
+							</Column>-->
+					</columns>
+					<ColumnListItem vAlign="Middle">
+						<Text text="{BRMMaster>name/givenName} {BRMMaster>name/familyName}"/>
+						<Text text="{BRMMaster>emails/0/value}"/>
+						<Text text="{BRMMaster>id}"/>
+						<!--	<Text text="{BRMMaster>groups/0/value}"/>-->
+						<core:Icon src="sap-icon://overflow" color="#1C4C98" press="onVendorReqdetails"></core:Icon>
+					</ColumnListItem>
+				</Table>
+				<!--	</ScrollContainer>-->
+			</IconTabFilter>
+			<IconTabSeparator/>
+			<IconTabFilter count="{App>/Vendor/VendStewCount}" text="Steward" key="vendSteward">
+				<Table id="idVendStewrdTbl" visible="{App>/Vendor/steward}" sticky="ColumnHeaders" items="{path:'BRMMaster>/aFilterMDGStewardData'}"
+					inset="false" growing="true">
+					<headerToolbar>
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							<SearchField placeholder="Search by Attribute" search="onVendStewrdTableSearch" width="17.5rem"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column mergeDuplicates="true">
+							<header>
+								<Text text="ATTRIBUTE (COUNTRY + ACCOUNT GROUP)"/>
+							</header>
+						</Column>
+						<Column>
+							<header>
+								<Text text="VALUE"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true">
+							<header>
+								<Text text="STAGE APPROVER"/>
+							</header>
+						</Column>
+					</columns>
+					<ColumnListItem vAlign="Middle" type="Detail" detailPress="onVendorDetails">
+						<Text text="{BRMMaster>value}"/>
+						<Text text="{BRMMaster>attributeName}"/>
+						<MultiComboBox editable="false" selectedKeys="{BRMMaster>approver}" items="{path:'BRMMaster>/FilterVendorStewardData'}">
+							<core:Item text="{BRMMaster>name}" key="{BRMMaster>key}"/>
+						</MultiComboBox>
+					</ColumnListItem>
+				</Table>
+			</IconTabFilter>
+			<IconTabSeparator/>
+			<IconTabFilter count="{App>/Vendor/VendApproverCount}" text="Approvers" key="vendApprover">
+				<Table id="idVendApprovTbl" visible="{App>/Vendor/approver}" sticky="ColumnHeaders" items="{path:'BRMMaster>/aFilterMDGApproverData'}"
+					growing="true">
+					<headerToolbar>
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							<SearchField placeholder="Search by Attribute" search="onVendApprovTableSearch" width="17.5rem"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column mergeDuplicates="true">
+							<header>
+								<Text text="ATTRIBUTE (COUNTRY + ACCOUNT GROUP)"/>
 							</header>
 						</Column>
 						<Column>
@@ -132,13 +119,6 @@
 						<MultiComboBox editable="false" selectedKeys="{BRMMaster>approver}" items="{path:'BRMMaster>/FilterVendorApproverData'}">
 							<core:Item text="{BRMMaster>name}" key="{BRMMaster>key}"/>
 						</MultiComboBox>
-						<!--<ObjectIdentifier title="{Name}" text="{ProductId}"/>
-				<Text text="{Width} x {Depth} x {Height} {DimUnit}"/>
-				<ObjectNumber number="{WeightMeasure}" unit="{WeightUnit}"
-					state="{ path: 'WeightMeasure', formatter: 'sap.m.sample.TableMergeCells.Formatter.weightState' }"/>
-				<ObjectNumber
-					number="{ parts:[{path:'Price'},{path:'CurrencyCode'}], type: 'sap.ui.model.type.Currency', formatOptions: {showMeasure: false} }"
-					unit="{CurrencyCode}"/>-->
 					</ColumnListItem>
 				</Table>
 			</IconTabFilter>
