@@ -14,8 +14,13 @@ sap.ui.define([
 				Vendor: {
 					requestor: true,
 					steward: false,
-					approver: false
-				}
+					approver: false,
+					reqTblID: "idVendReqTbl",
+					stewTblID: "idVendReqTbl",
+					approvTblID: "idVendApprovTbl"
+
+				},
+				Customer: {}
 
 			});
 		}

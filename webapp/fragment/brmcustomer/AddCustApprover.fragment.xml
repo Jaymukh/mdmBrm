@@ -1,0 +1,50 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
+	xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
+	<!--	<Dialog title="{= ${BRMVendor>/Edit} ? Update Stage Approver: Add Stage Approver}" class="sapUiSizeCompact">-->
+	<Dialog title="Edit Stage Approver" contentWidth="40%" draggable="false" class="sapUiSizeCompact">
+		<content>
+			<VBox class="sapUiSmallMargin">
+				<f:Form editable="true" width="100%">
+					<f:layout>
+						<f:ResponsiveGridLayout labelSpanXL="4" labelSpanL="4" labelSpanM="4" labelSpanS="12" adjustLabelSpan="false" emptySpanXL="5" emptySpanL="2"
+							emptySpanM="2" emptySpanS="0" columnsXL="2" columnsL="2" columnsM="1" singleContainerFullSize="false"/>
+					</f:layout>
+					<f:formContainers>
+						<f:FormContainer >
+							<f:formElements>
+								<f:FormElement >
+									<f:label>
+										<Label text="ATTRIBUTE"/>
+									</f:label>
+									<Input editable="false" value="{BRMMaster>/CustStewApprov/value}"></Input>
+								</f:FormElement>
+								<f:FormElement>
+									<f:label>
+										<Label text="VALUE"/>
+									</f:label>
+									<Input editable="false" value="{BRMMaster>/CustStewApprov/attributeName}"></Input>
+								</f:FormElement>
+								<f:FormElement>
+									<f:label>
+										<Label text="STAGE APPROVER"/>
+									</f:label>
+									<!--	<Input value="{BRMVendor>/value}" maxLength="40"/>-->
+									<MultiComboBox selectedKeys="{BRMMaster>/CustStewApprov/approver}" items="{path:'BRMMaster>/FilterCustomerApproverData'}">
+										<core:Item text="{BRMMaster>name}" key="{BRMMaster>key}"/>
+									</MultiComboBox>
+								</f:FormElement>
+							</f:formElements>
+						</f:FormContainer>
+					</f:formContainers>
+				</f:Form>
+			</VBox>
+		</content>
+		<beginButton>
+			<!--	<Button text="{= ${BRMVendor>/Edit} ? Update : Create}" type="Accept" press="onSaveCustContacts"/>-->
+			<Button text="Update" type="Accept" press="onSaveCustApprover"/>
+		</beginButton>
+		<endButton>
+			<Button text="Cancel" type="Reject" press="onCloseCustApprover"/>
+		</endButton>
+	</Dialog>
+</core:FragmentDefinition>

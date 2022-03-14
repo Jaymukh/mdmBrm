@@ -1,0 +1,13 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Popover id="myCustPopover" title="ACCOUNT GROUPS" placement="Right">
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button text="Close" press="handleCloseCustACgrp"/>
+			</Toolbar>
+		</footer>
+		<List items="{BRMMaster>/CustomerACGroupdData}">
+			<StandardListItem title="{BRMMaster>value}"/>
+		</List>
+	</Popover>
+</core:FragmentDefinition>

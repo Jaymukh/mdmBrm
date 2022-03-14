@@ -1,37 +1,38 @@
 <mvc:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:uxap="sap.uxap" xmlns:l="sap.ui.layout" xmlns:f="sap.f"
 	xmlns:suite="sap.suite.ui.commons" controllerName="murphy.mdm.brm.murphybusinessrule.controller.Dashboard"
 	xmlns:html="http://www.w3.org/1999/xhtml" xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1">
-<!--	<Page title="Title" showHeader="false" showFooter="true">
+	<!--	<Page title="Title" showHeader="false" showFooter="true">
 		<content>-->
-			<uxap:ObjectPageLayout id="idDashboardObjectPage" upperCaseAnchorBar="false" useIconTabBar="true" preserveHeaderStateOnScroll="true">
-				<uxap:sections>
-					<uxap:ObjectPageSection id="idVndr" title="Vendor" titleUppercase="false">
-						<uxap:subSections>
-							<uxap:ObjectPageSubSection title="" titleUppercase="false" id="idVendorSection">
-								<uxap:blocks>
-									<uxap:ObjectPageLazyLoader stashed="true" id="idVendorDataBlock">
-										<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmvendor.Vendor" type="XML"/>
-									</uxap:ObjectPageLazyLoader>
-								</uxap:blocks>
-							</uxap:ObjectPageSubSection>
-						</uxap:subSections>
-					</uxap:ObjectPageSection>
-					<uxap:ObjectPageSection id="idCustmr" title="Customer" titleUppercase="false">
-						<uxap:subSections>
-							<uxap:ObjectPageSubSection title="Customer" titleUppercase="false" id="idCutomerSection">
-								<uxap:blocks>
-									<uxap:ObjectPageLazyLoader stashed="true" id="idCustomerBlock">
-										<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.Customer" type="XML"/>
-									</uxap:ObjectPageLazyLoader>
-								</uxap:blocks>
-							</uxap:ObjectPageSubSection>
-						</uxap:subSections>
-					</uxap:ObjectPageSection>
-				</uxap:sections>
-			</uxap:ObjectPageLayout>
-		<!--</content>
+	<uxap:ObjectPageLayout id="idDashboardObjectPage" upperCaseAnchorBar="false" useIconTabBar="true" preserveHeaderStateOnScroll="true"
+		navigate="onObjpagenav">
+		<uxap:sections>
+			<uxap:ObjectPageSection  id="idVndr" title="Vendor" titleUppercase="false">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection title="Vendor" titleUppercase="false" id="idVendorSection">
+						<uxap:blocks>
+							<uxap:ObjectPageLazyLoader stashed="true" id="idVendorDataBlock">
+								<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmvendor.Vendor" type="XML"/>
+							</uxap:ObjectPageLazyLoader>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection id="idCustmr" title="Customer" titleUppercase="false">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection title="Customer" titleUppercase="false" id="idCutomerSection">
+						<uxap:blocks>
+							<uxap:ObjectPageLazyLoader stashed="true" id="idCustomerBlock">
+								<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmcustomer.Customer" type="XML"/>
+							</uxap:ObjectPageLazyLoader>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+		</uxap:sections>
+	</uxap:ObjectPageLayout>
+	<!--</content>
 		<footer>-->
-			<!--	<OverflowToolbar >
+	<!--	<OverflowToolbar >
 				<Button text="Cancel" icon="sap-icon://cancel" type="Reject" press="onCancelCoc" custData:status="090"/>
 				<ToolbarSpacer/>
 				<Button type="Emphasized" text="Ok" icon="sap-icon://cart-approval" press="onUpdateStatus" custData:status="030"/>

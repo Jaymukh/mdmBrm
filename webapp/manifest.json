@@ -81,11 +81,17 @@
 			"VendrStewApprov": {
 				"type": "sap.ui.model.json.JSONModel"
 			},
+			"MDGCustData": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
 			"MDGVendorWorkflow": {
-				"type": "sap.ui.model.json.JSONModel",
-				"settings": {
-					"defaultBindingMode": "OneTime"
-				}
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"MDGCustomerWorkflow": {
+				"type": "sap.ui.model.json.JSONModel"
+			},
+			"CustStewApprov": {
+				"type": "sap.ui.model.json.JSONModel"
 			},
 			"App": {
 				"type": "sap.ui.model.json.JSONModel"

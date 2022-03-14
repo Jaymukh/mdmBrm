@@ -1,0 +1,127 @@
+<core:FragmentDefinition xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:uxap="sap.uxap" xmlns:l="sap.ui.layout"
+	xmlns:f="sap.f" xmlns:suite="sap.suite.ui.commons" xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1"
+	xmlns:html="http://www.w3.org/1999/xhtml">
+	<IconTabBar headerMode="Inline" select=".onVendorFilterSelect" class="sapUiResponsiveContentPadding">
+		<items>
+			<IconTabFilter count="{App>/Customer/requestorCount}" text="Requestors" key="vendReq">
+				<!--	<ScrollContainer height="300PX" width="100%" horizontal="false" vertical="true">-->
+				<Table id="idCustReqTbl" visible="{App>/Vendor/requestor}" sticky="ColumnHeaders" inset="false" growing="true"
+					items="{path:'BRMMaster>/FilterCustomerReqData'}" class="sapFDynamicPageAlignContent" width="auto">
+					<headerToolbar>
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							<SearchField placeholder="Search by user" search="onCustReqTableSearch" width="17.5rem"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column mergeDuplicates="true">
+							<header>
+								<Text text="USERS"/>
+							</header>
+						</Column>
+						<Column hAlign="Center">
+							<header>
+								<Text text="EMAIL ID"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+							<header>
+								<Text text="PID"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true" hAlign="Center">
+							<header>
+								<Text text="ACCOUNT GROUPS"/>
+							</header>
+						</Column>
+						<!--	<Column minScreenWidth="Tablet" demandPopin="true">
+								<header>
+									<Text text=""/>
+								</header>
+							</Column>-->
+					</columns>
+					<ColumnListItem vAlign="Middle">
+						<Text text="{BRMMaster>name/givenName} {BRMMaster>name/familyName}"/>
+						<Text text="{BRMMaster>emails/0/value}"/>
+						<Text text="{BRMMaster>id}"/>
+						<!--	<Text text="{BRMMaster>groups/0/value}"/>-->
+						<core:Icon src="sap-icon://overflow" color="#1C4C98" press="onCustomerReqdetails"></core:Icon>
+					</ColumnListItem>
+				</Table>
+				<!--	</ScrollContainer>-->
+			</IconTabFilter>
+			<IconTabSeparator/>
+			<IconTabFilter count="{App>/Customer/CustStewCount}" text="Steward" key="vendSteward">
+				<Table id="idCustStewrdTbl" visible="{App>/Customer/steward}" sticky="ColumnHeaders" items="{path:'BRMMaster>/aCustFilterMDGStewardData'}"
+					inset="false" growing="true">
+					<headerToolbar>
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							<SearchField placeholder="Search by Attribute" search="onCustStewrdTableSrch" width="17.5rem"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column mergeDuplicates="true">
+							<header>
+								<Text text="ATTRIBUTE (COUNTRY + ACCOUNT GROUP)"/>
+							</header>
+						</Column>
+						<Column>
+							<header>
+								<Text text="VALUE"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true">
+							<header>
+								<Text text="STAGE APPROVER"/>
+							</header>
+						</Column>
+					</columns>
+					<ColumnListItem vAlign="Middle" type="Detail" detailPress="onCustStewDetails">
+						<Text text="{BRMMaster>value}"/>
+						<Text text="{BRMMaster>attributeName}"/>
+						<MultiComboBox editable="false" selectedKeys="{BRMMaster>approver}" items="{path:'BRMMaster>/FilterCustomerStewardData'}">
+							<core:Item text="{BRMMaster>name}" key="{BRMMaster>key}"/>
+						</MultiComboBox>
+					</ColumnListItem>
+				</Table>
+			</IconTabFilter>
+			<IconTabSeparator/>
+			<IconTabFilter count="{App>/Customer/CustApproverCount}" text="Approvers" key="vendApprover">
+				<Table id="idCustApprovTbl" visible="{App>/Customer/approver}" sticky="ColumnHeaders" items="{path:'BRMMaster>/aCustFilterMDGApproverData'}"
+					growing="true">
+					<headerToolbar>
+						<OverflowToolbar>
+							<ToolbarSpacer/>
+							<SearchField placeholder="Search by Attribute" search="onCustAprobrTablSrch" width="17.5rem"/>
+						</OverflowToolbar>
+					</headerToolbar>
+					<columns>
+						<Column mergeDuplicates="true">
+							<header>
+								<Text text="ATTRIBUTE (COUNTRY + ACCOUNT GROUP)"/>
+							</header>
+						</Column>
+						<Column>
+							<header>
+								<Text text="VALUE"/>
+							</header>
+						</Column>
+						<Column minScreenWidth="Tablet" demandPopin="true">
+							<header>
+								<Text text="STAGE APPROVER"/>
+							</header>
+						</Column>
+					</columns>
+					<ColumnListItem vAlign="Middle" type="Detail" detailPress="onCustApproverDetails">
+						<Text text="{BRMMaster>value}"/>
+						<Text text="{BRMMaster>attributeName}"/>
+						<MultiComboBox editable="false" selectedKeys="{BRMMaster>approver}" items="{path:'BRMMaster>/FilterCustomerApproverData'}">
+							<core:Item text="{BRMMaster>name}" key="{BRMMaster>key}"/>
+						</MultiComboBox>
+					</ColumnListItem>
+				</Table>
+			</IconTabFilter>
+		</items>
+	</IconTabBar>
+</core:FragmentDefinition>

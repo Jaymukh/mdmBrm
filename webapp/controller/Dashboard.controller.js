@@ -28,13 +28,16 @@ sap.ui.define([
 			this.vendorUserlist();
 		},
 		vendorUserlist: function () {
+			//	var url = "/MurphyCloudIdPDest/service/scim/Users";
 			var url = "/sap/fiori/murphybusinessrule/MurphyCloudIdPDest/service/scim/Users";
-				//var url = "/murphybusinessrule/MurphyCloudIdPDest/service/scim/Users";
 			this.paginated_fetch(url).then(function (oData) {
 				var oResult = oData;
 				var aVendReq = [];
 				var aVendApprov = [];
 				var aVendSteward = [];
+				var aCustReq = [];
+				var aCustApprov = [];
+				var aCustSteward = [];
 				for (var i = 0; i < oResult.length; i++) {
 					var aGroups = oResult[i].groups;
 					var oDataObj = oResult[i];
@@ -53,12 +56,31 @@ sap.ui.define([
 									'key': email
 								});
 							} else if (aGroups[j].value.search("DA_MDM_VEND_STEW") === 0) {
-								var name = oDataObj.name.givenName + ' ' + oDataObj.name.familyName;
-								var email = oDataObj.emails[0].value.toUpperCase();
+								var vsname = oDataObj.name.givenName + ' ' + oDataObj.name.familyName;
+								var vsemail = oDataObj.emails[0].value.toUpperCase();
 
 								aVendSteward.push({
-									'name': name,
-									'key': email
+									'name': vsname,
+									'key': vsemail
+								});
+							}
+							//////////////Filter Customer users
+							if (aGroups[j].value.search("DA_MDM_CUST_REQ") === 0) {
+								aCustReq.push(oDataObj);
+							} else if (aGroups[j].value.search("DA_MDM_CUST_APPROV") === 0) {
+								var cname = oDataObj.name.givenName + ' ' + oDataObj.name.familyName;
+								var cemail = oDataObj.emails[0].value.toUpperCase();
+								aCustApprov.push({
+									'name': cname,
+									'key': cemail
+								});
+							} else if (aGroups[j].value.search("DA_MDM_CUST_STEW") === 0) {
+								var csname = oDataObj.name.givenName + ' ' + oDataObj.name.familyName;
+								var csemail = oDataObj.emails[0].value.toUpperCase();
+
+								aCustSteward.push({
+									'name': csname,
+									'key': csemail
 								});
 							}
 						}
@@ -94,11 +116,32 @@ sap.ui.define([
 					[cur.key]: cur
 				}), {}));
 				this.getView().getModel("BRMMaster").setProperty("/FilterVendorStewardData", aVendorStewardData);
+
+				//////////Removeing duplicates in array
+				var aCustomerReqData = Object.values(aCustReq.reduce((acc, cur) => Object.assign(acc, {
+					[cur.id]: cur
+				}), {}));
+				////End
+				this.getView().getModel("BRMMaster").setProperty("/FilterCustomerReqData", aCustomerReqData);
+				this.getView().getModel("App").setProperty("/Customer/requestorCount", aCustomerReqData.length);
+
+				var aCustomerApprvData = Object.values(aCustApprov.reduce((acc, cur) => Object.assign(acc, {
+					[cur.key]: cur
+				}), {}));
+				this.getView().getModel("BRMMaster").setProperty("/FilterCustomerApproverData", aCustomerApprvData);
+
+				//////////Removeing duplicates in array
+				var aCusomerStewardData = Object.values(aCustSteward.reduce((acc, cur) => Object.assign(acc, {
+					[cur.key]: cur
+				}), {}));
+				this.getView().getModel("BRMMaster").setProperty("/FilterCustomerStewardData", aCusomerStewardData);
+
 				////////////
-				this.getStewardApproverData();
+				this.getVendorSetwardApproverData();
+				this.getCustomerStewardApproverData();
 			}.bind(this));
 		},
-		getStewardApproverData: function () {
+		getVendorSetwardApproverData: function () {
 			$.ajax({
 				url: '/sap/fiori/murphybusinessrule/MDM_WORKBOX_DEST/customProcess/getAttributes/MDGVendorWorkflow?processType=Ad-hoc&_=1644482799078',
 				type: 'GET',
@@ -134,6 +177,45 @@ sap.ui.define([
 				}
 			});
 		},
+		getCustomerStewardApproverData: function () {
+			//	this.getView().setBusy(true);
+			$.ajax({
+				url: '/sap/fiori/murphybusinessrule/MDM_WORKBOX_DEST/customProcess/getAttributes/MDGCustomerWorkflow?processType=Ad-hoc&_=1644482799078',
+				type: 'GET',
+				contentType: "application/json; charset=utf-8",
+				dataType: "json",
+				Asynch: false,
+				success: function (data, textStatus) {
+					var oResult = data;
+					//	this.getView().getModel("MDGCustData").setData(oResult);
+					this.getView().getModel("BRMMaster").setProperty("/MDGCustomerWorkflow", oResult);
+					/*	var mdgVendSteward = [];
+						var msdgVendApprover = []
+						oResult.teamDetailDto.find(function (post) {
+							if (post.eventName == "Steward Task") {
+								mdgVendSteward.push(post);
+							} else if (post.eventName == "ApproverTask") {
+								msdgVendApprover.push(post);
+							}
+						})*/
+					var mdgCustSteward = oResult.teamDetailDto.filter(role => role.eventName === "Steward Task");
+					var mdgCustApprover = oResult.teamDetailDto.filter(role => role.eventName === "ApproverTask");
+
+					this.getView().getModel("BRMMaster").setProperty("/oCustMDGStewardData", mdgCustSteward[0]);
+					this.getView().getModel("BRMMaster").setProperty("/aCustFilterMDGStewardData", mdgCustSteward[0].ownerSelectionRules.reverse());
+					this.getView().getModel("App").setProperty("/Customer/CustStewCount", mdgCustSteward[0].ownerSelectionRules.length);
+
+					this.getView().getModel("BRMMaster").setProperty("/oCustMDGApproverData", mdgCustApprover[0]);
+					this.getView().getModel("BRMMaster").setProperty("/aCustFilterMDGApproverData", mdgCustApprover[0].ownerSelectionRules.reverse());
+					this.getView().getModel("App").setProperty("/Customer/CustApproverCount", mdgCustApprover[0].ownerSelectionRules.length);
+					this.getView().setBusy(false);
+				}.bind(this),
+				error: function (jqXHR, tranStatus) {
+					this.getView().setBusy(false);
+				}
+			});
+
+		},
 		onVendorReqdetails: function (oEvent) {
 			var oSource = oEvent.getSource();
 			var aGroups = oSource.getBindingContext("BRMMaster").getProperty("groups");
@@ -158,10 +240,36 @@ sap.ui.define([
 			});
 
 		},
+		onCustomerReqdetails: function (oEvent) {
+			var oSource = oEvent.getSource();
+			var aGroups = oSource.getBindingContext("BRMMaster").getProperty("groups");
+
+			var aFilterGrp = aGroups.filter(role => role.value.search("DA_MDM_CUST_REQ") === 0);
+			this.getView().getModel("BRMMaster").setProperty("/CustomerACGroupdData", aFilterGrp);
+			var oView = this.getView();
+			// create popover
+			if (!this._custpPopover) {
+				this._custpPopover = Fragment.load({
+					id: oView.getId(),
+					name: "murphy.mdm.brm.murphybusinessrule.fragment.brmcustomer.CustomerACgroup",
+					controller: this
+				}).then(function (oCustPopover) {
+					oView.addDependent(oCustPopover);
+					oCustPopover.bindElement("/aGroups");
+					return oCustPopover;
+				});
+			}
+			this._custpPopover.then(function (oCustPopover) {
+				oCustPopover.openBy(oSource);
+			});
+
+		},
 		handleCloseVendorACgrp: function () {
 			this.getView().byId("myPopover").close();
 		},
-
+		handleCloseCustACgrp: function () {
+			this.getView().byId("myCustPopover").close();
+		},
 		paginated_fetch: function (
 			url = is_required("url"), // Improvised required argument in JS
 			page = 1,
@@ -233,7 +341,7 @@ sap.ui.define([
 		},
 		onCloseVendSteward: function (oEvent) {
 			this.getView().setBusy(true);
-			this.getStewardApproverData();
+			this.getVendorSetwardApproverData();
 			this._pValueHelpDialog.then(function (oValueHelpDialog) {
 				oValueHelpDialog.close();
 			}.bind(this));
@@ -247,6 +355,66 @@ sap.ui.define([
 			var oVendor = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
 			this.getView().getModel("VendrStewApprov").setData(oVendor);
 			this.loadAddEditVendorApprovr(oEvent);
+		},
+		onCustStewDetails: function (oEvent) {
+			var oCustomer = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			this.getView().getModel("BRMMaster").setProperty("/CustStewApprov", oCustomer);
+			//	this.getView().getModel("CustStewApprov").setData(oVendor);
+			this.loadAddEditCustStew(oEvent);
+		},
+		onCustApproverDetails: function (oEvent) {
+			var oCustomer = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			//this.getView().getModel("CustStewApprov").setData(oVendor);
+			this.getView().getModel("BRMMaster").setProperty("/CustStewApprov", oCustomer);
+			this.loadAddEditCustApprover(oEvent);
+		},
+		loadAddEditCustApprover: function (oEvent) {
+			var oView = this.getView();
+			if (!this._oDialogCustAprovr) {
+				this._oDialogCustAprovr = Fragment.load({
+					id: oView.getId(),
+					name: "murphy.mdm.brm.murphybusinessrule.fragment.brmcustomer.AddCustApprover",
+					controller: this
+				}).then(function (oCustAprovrDialog) {
+					oView.addDependent(oCustAprovrDialog);
+					return oCustAprovrDialog;
+				});
+			}
+			this._oDialogCustAprovr.then(function (oCustAprovrDialog) {
+				oCustAprovrDialog.open();
+			}.bind(this));
+
+		},
+		onCloseCustApprover: function (oEvent) {
+			this.getView().setBusy(true);
+			this.getCustomerStewardApproverData();
+			this._oDialogCustAprovr.then(function (oCustAprovrDialog) {
+				oCustAprovrDialog.close();
+			}.bind(this));
+		},
+		loadAddEditCustStew: function (oEvent) {
+			var oView = this.getView();
+			if (!this._oDialogCustStew) {
+				this._oDialogCustStew = Fragment.load({
+					id: oView.getId(),
+					name: "murphy.mdm.brm.murphybusinessrule.fragment.brmcustomer.AddCustStew",
+					controller: this
+				}).then(function (oCustStewDialog) {
+					oView.addDependent(oCustStewDialog);
+					return oCustStewDialog;
+				});
+			}
+			this._oDialogCustStew.then(function (oCustStewDialog) {
+				oCustStewDialog.open();
+			}.bind(this));
+
+		},
+		onCloseCustSteward: function (oEvent) {
+			this.getView().setBusy(true);
+			this.getCustomerStewardApproverData();
+			this._oDialogCustStew.then(function (oCustStewDialog) {
+				oCustStewDialog.close();
+			}.bind(this));
 		},
 		loadAddEditVendorApprovr: function (oEvent) {
 			var oView = this.getView();
@@ -267,7 +435,7 @@ sap.ui.define([
 		},
 		onCloseVendApprover: function (oEvent) {
 			this.getView().setBusy(true);
-			this.getStewardApproverData();
+			this.getVendorSetwardApproverData();
 			this._oDialogVendApprov.then(function (oVendApprovDialog) {
 				oVendApprovDialog.close();
 			}.bind(this));
@@ -318,6 +486,33 @@ sap.ui.define([
 				});*/
 
 		},
+		onSaveCustSteward: function () {
+			this.getView().setBusy(true);
+			var oMDGCust = this.getView().getModel("BRMMaster").getProperty("/MDGCustomerWorkflow");
+			var objParamCreate = {
+				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
+				type: 'POST',
+				hasPayload: true,
+				data: oMDGCust
+			};
+			this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
+				this.onCloseCustSteward();
+			}.bind(this));
+		},
+		onSaveCustApprover: function () {
+			this.getView().setBusy(true);
+			var oMDGCust = this.getView().getModel("BRMMaster").getProperty("/MDGCustomerWorkflow");
+			var objParamCreate = {
+				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
+				type: 'POST',
+				hasPayload: true,
+				data: oMDGCust
+			};
+			this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
+				this.onCloseCustApprover();
+			}.bind(this));
+
+		},
 		onVendReqTableSearch: function (event) {
 			/*	var oTableSearchState = [],
 					sQuery = oEvent.getSource().getValue();
@@ -360,12 +555,61 @@ sap.ui.define([
 			this.getView().byId("idVendStewrdTbl").getBinding("items").filter(oTableSearchState, "Application");
 		},
 		onVendApprovTableSearch: function (oEvent) {
+			var oTableSearchState = [],
+				sQuery = oEvent.getSource().getValue();
+			if (sQuery && sQuery.length > 0) {
+				oTableSearchState.push(new Filter("value", FilterOperator.Contains, sQuery));
+			}
+			this.getView().byId("idVendApprovTbl").getBinding("items").filter(oTableSearchState, "Application");
+		},
+		onObjpagenav: function (oEvent) {
+			/*	var sTitle = oEvent.getParameters().section._sInternalTitle;
+				if (sTitle === "Vendor") {
+					this.getVendorSetwardApproverData();
+				} else if (sTitle === "Customer") {
+					this.getCustomerStewardApproverData();
+				}*/
+		},
+		onCustReqTableSearch: function (event) {
+			var query = event.getParameter("query");
+			this.getView().byId("idCustReqTbl").getBinding("items").filter(new Filter({
+				filters: [
+					new Filter({
+						filters: [
+							new Filter({
+								path: "name/givenName",
+								operator: FilterOperator.Contains,
+								value1: query,
+								caseSensitive: false,
+							}),
+							new Filter({
+								path: "name/familyName",
+								operator: FilterOperator.Contains,
+								value1: query,
+								caseSensitive: false,
+							}),
+						],
+						and: false,
+					})
+				],
+				and: true,
+			}), FilterType.Application);
+		},
+		onCustStewrdTableSrch: function (oEvent) {
+			var oTableSearchState = [],
+				sQuery = oEvent.getSource().getValue();
+			if (sQuery && sQuery.length > 0) {
+				oTableSearchState.push(new Filter("value", FilterOperator.Contains, sQuery));
+			}
+			this.getView().byId("idCustStewrdTbl").getBinding("items").filter(oTableSearchState, "Application");
+		},
+		onCustAprobrTablSrch: function (oEvent) {
 				var oTableSearchState = [],
 					sQuery = oEvent.getSource().getValue();
 				if (sQuery && sQuery.length > 0) {
 					oTableSearchState.push(new Filter("value", FilterOperator.Contains, sQuery));
 				}
-				this.getView().byId("idVendApprovTbl").getBinding("items").filter(oTableSearchState, "Application");
+				this.getView().byId("idCustApprovTbl").getBinding("items").filter(oTableSearchState, "Application");
 			}
 			/*	onNavtoNotFound: function () {
 						this.getOwnerComponent().getRouter().getTargets().display("notFound");
