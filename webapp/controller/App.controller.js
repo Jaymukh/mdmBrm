@@ -20,8 +20,10 @@ sap.ui.define([
 					approvTblID: "idVendApprovTbl"
 
 				},
-				Customer: {}
-
+				Customer: {},
+				CC: {},
+				PC:{},
+				GL:{}
 			});
 		}
 	});

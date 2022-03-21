@@ -6,7 +6,7 @@
 	<uxap:ObjectPageLayout id="idDashboardObjectPage" upperCaseAnchorBar="false" useIconTabBar="true" preserveHeaderStateOnScroll="true"
 		navigate="onObjpagenav">
 		<uxap:sections>
-			<uxap:ObjectPageSection  id="idVndr" title="Vendor" titleUppercase="false">
+			<uxap:ObjectPageSection id="idVndr" title="Vendor" titleUppercase="false">
 				<uxap:subSections>
 					<uxap:ObjectPageSubSection title="Vendor" titleUppercase="false" id="idVendorSection">
 						<uxap:blocks>
@@ -23,6 +23,39 @@
 						<uxap:blocks>
 							<uxap:ObjectPageLazyLoader stashed="true" id="idCustomerBlock">
 								<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmcustomer.Customer" type="XML"/>
+							</uxap:ObjectPageLazyLoader>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection id="idCostcenter" title="Cost Center" titleUppercase="false">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection title="Cost Center" titleUppercase="false" id="idCostcenterSection">
+						<uxap:blocks>
+							<uxap:ObjectPageLazyLoader stashed="true" id="idCostcenterBlock">
+								<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmCostCenter.CostCenter" type="XML"/>
+							</uxap:ObjectPageLazyLoader>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection id="idProfitcenter" title="Profit Center" titleUppercase="false">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection title="Profit Center" titleUppercase="false" id="idProfitCenterSection">
+						<uxap:blocks>
+							<uxap:ObjectPageLazyLoader stashed="true" id="idProfitcenterBlock">
+								<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmProfitCenter.ProfitCenter" type="XML"/>
+							</uxap:ObjectPageLazyLoader>
+						</uxap:blocks>
+					</uxap:ObjectPageSubSection>
+				</uxap:subSections>
+			</uxap:ObjectPageSection>
+			<uxap:ObjectPageSection id="idGLAccount" title="GL Account" titleUppercase="false">
+				<uxap:subSections>
+					<uxap:ObjectPageSubSection title="GL Account" titleUppercase="false" id="idGLAccountSection">
+						<uxap:blocks>
+							<uxap:ObjectPageLazyLoader stashed="true" id="idGLAccountBlock">
+								<core:Fragment fragmentName="murphy.mdm.brm.murphybusinessrule.fragment.brmGLAccount.GLAccount" type="XML"/>
 							</uxap:ObjectPageLazyLoader>
 						</uxap:blocks>
 					</uxap:ObjectPageSubSection>

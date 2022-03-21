@@ -1,0 +1,13 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core">
+	<Popover id="myGLPopover" title="ACCOUNT GROUPS" placement="Right">
+		<footer>
+			<Toolbar>
+				<ToolbarSpacer/>
+				<Button text="Close" press="handleCloseGLACgrp"/>
+			</Toolbar>
+		</footer>
+		<List items="{BRMMaster>/GLACGroupdData}">
+			<StandardListItem title="{BRMMaster>value}"/>
+		</List>
+	</Popover>
+</core:FragmentDefinition>

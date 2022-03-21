@@ -5,8 +5,8 @@
 		<items>
 			<IconTabFilter count="{App>/Customer/requestorCount}" text="Requestors" key="vendReq">
 				<!--	<ScrollContainer height="300PX" width="100%" horizontal="false" vertical="true">-->
-				<Table id="idCustReqTbl" visible="{App>/Vendor/requestor}" sticky="ColumnHeaders" inset="false" growing="true"
-					items="{path:'BRMMaster>/FilterCustomerReqData'}" class="sapFDynamicPageAlignContent" width="auto">
+				<Table id="idCustReqTbl" sticky="ColumnHeaders" inset="false" growing="true" items="{path:'BRMMaster>/FilterCustomerReqData'}"
+					class="sapFDynamicPageAlignContent" width="auto">
 					<headerToolbar>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
@@ -52,8 +52,7 @@
 			</IconTabFilter>
 			<IconTabSeparator/>
 			<IconTabFilter count="{App>/Customer/CustStewCount}" text="Steward" key="vendSteward">
-				<Table id="idCustStewrdTbl" visible="{App>/Customer/steward}" sticky="ColumnHeaders" items="{path:'BRMMaster>/aCustFilterMDGStewardData'}"
-					inset="false" growing="true">
+				<Table id="idCustStewrdTbl" sticky="ColumnHeaders" items="{path:'BRMMaster>/aCustFilterMDGStewardData'}" inset="false" growing="true">
 					<headerToolbar>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
@@ -88,8 +87,7 @@
 			</IconTabFilter>
 			<IconTabSeparator/>
 			<IconTabFilter count="{App>/Customer/CustApproverCount}" text="Approvers" key="vendApprover">
-				<Table id="idCustApprovTbl" visible="{App>/Customer/approver}" sticky="ColumnHeaders" items="{path:'BRMMaster>/aCustFilterMDGApproverData'}"
-					growing="true">
+				<Table id="idCustApprovTbl" sticky="ColumnHeaders" items="{path:'BRMMaster>/aCustFilterMDGApproverData'}" growing="true">
 					<headerToolbar>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
