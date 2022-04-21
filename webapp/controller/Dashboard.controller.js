@@ -28,8 +28,8 @@ sap.ui.define([
 			this.vendorUserlist();
 		},
 		vendorUserlist: function () {
-			//var url = "/MurphyCloudIdPDest/service/scim/Users";
-			var url = "/sap/fiori/murphybusinessrule/MurphyCloudIdPDest/service/scim/Users";
+		//	var url = "/MurphyCloudIdPDest/service/scim/Users";
+				var url = "/sap/fiori/murphybusinessrule/MurphyCloudIdPDest/service/scim/Users";
 			this.paginated_fetch(url).then(function (oData) {
 				var oResult = oData;
 				var aVendReq = [];
@@ -607,16 +607,70 @@ sap.ui.define([
 			this.loadAddEditVendor(oEvent);
 		},
 		emptyVendorObject: function () {
-			this.getView().getModel("BRMVendor").setData({
-				"attribute": "",
-				"value": "",
-				"stageapprover": "",
-				"usertype": "",
-				Edit: false
+			var sRandnum = Math.random().toString(36).substring(2, 15);
+			this.getView().getModel("VendrStewApprov").setData({
+				ruleId: sRandnum,
+				custom_key: "6f83h9g3fe04h",
+				condition: "",
+				approver: [
+
+				],
+				logic: "=",
+				value: "",
+				attributeName: "CountryCodeAccountGroup",
+				isDeleted: false,
+				Edit: false,
+				countrycode: "",
+				accountgrp: ""
+
 			});
+		},
+		onChangeCCACGrp: function () {
+			var cc = this.getView().getModel("VendrStewApprov").getProperty("/countrycode");
+			var accountgrp = this.getView().getModel("VendrStewApprov").getProperty("/accountgrp");
+			var attribue = cc + "+" + accountgrp;
+			var condition = "=" + attribue;
+			this.getView().getModel("VendrStewApprov").setProperty("/value", attribue);
+			this.getView().getModel("VendrStewApprov").setProperty("/condition", condition);
+
+		},
+		onChangeCustCCACGrp: function () {
+			var cc = this.getView().getModel("BRMMaster").getProperty("/CustStewApprov/countrycode");
+			var accountgrp = this.getView().getModel("BRMMaster").getProperty("/CustStewApprov/accountgrp");
+			var attribue = cc + "+" + accountgrp;
+			var condition = "=" + attribue;
+			this.getView().getModel("BRMMaster").setProperty("/CustStewApprov/value", attribue);
+			this.getView().getModel("BRMMaster").setProperty("/CustStewApprov/condition", condition);
+
+		},
+		onChangeCostCCACGrp: function () {
+			var cc = this.getView().getModel("BRMMaster").getProperty("/CCStewApprov/countrycode");
+			var accountgrp = this.getView().getModel("BRMMaster").getProperty("/CCStewApprov/accountgrp");
+			var attribue = cc + "+" + accountgrp;
+			var condition = "=" + attribue;
+			this.getView().getModel("BRMMaster").setProperty("/CCStewApprov/value", attribue);
+			this.getView().getModel("BRMMaster").setProperty("/CCStewApprov/condition", condition);
+
+		},
+		onChangePCACGrp: function () {
+			var cc = this.getView().getModel("BRMMaster").getProperty("/PCStewApprov/countrycode");
+			var accountgrp = this.getView().getModel("BRMMaster").getProperty("/PCStewApprov/accountgrp");
+			var attribue = cc + "+" + accountgrp;
+			var condition = "=" + attribue;
+			this.getView().getModel("BRMMaster").setProperty("/PCStewApprov/value", attribue);
+			this.getView().getModel("BRMMaster").setProperty("/PCStewApprov/condition", condition);
+		},
+		onChangeGLACGrp: function () {
+			var cc = this.getView().getModel("BRMMaster").getProperty("/GLStewApprov/countrycode");
+			var accountgrp = this.getView().getModel("BRMMaster").getProperty("/GLStewApprov/accountgrp");
+			var attribue = cc + "+" + accountgrp;
+			var condition = "=" + attribue;
+			this.getView().getModel("BRMMaster").setProperty("/GLStewApprov/value", attribue);
+			this.getView().getModel("BRMMaster").setProperty("/GLStewApprov/condition", condition);
 		},
 		onVendorDetails: function (oEvent) {
 			var oVendor = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oVendor.Edit = true;
 			this.getView().getModel("VendrStewApprov").setData(oVendor);
 			this.loadAddEditVendor(oEvent);
 		},
@@ -651,56 +705,69 @@ sap.ui.define([
 		},
 		onVendorApproverDetails: function (oEvent) {
 			var oVendor = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oVendor.Edit = true;
 			this.getView().getModel("VendrStewApprov").setData(oVendor);
 			this.loadAddEditVendorApprovr(oEvent);
 		},
 		onCustStewDetails: function (oEvent) {
 			var oCustomer = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oCustomer.Edit = true;
 			this.getView().getModel("BRMMaster").setProperty("/CustStewApprov", oCustomer);
 			//	this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.loadAddEditCustStew(oEvent);
 		},
 		onCustApproverDetails: function (oEvent) {
 			var oCustomer = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oCustomer.Edit = true;
 			//this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.getView().getModel("BRMMaster").setProperty("/CustStewApprov", oCustomer);
 			this.loadAddEditCustApprover(oEvent);
 		},
 		onCCStewDetails: function (oEvent) {
 			var oCostCenterStew = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oCostCenterStew.Edit = true;
 			this.getView().getModel("BRMMaster").setProperty("/CCStewApprov", oCostCenterStew);
 			//	this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.loadAddEditCCStew(oEvent);
 		},
 		onCCApproverDetails: function (oEvent) {
 			var oCostCenterApprov = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oCostCenterApprov.Edit = true;
 			//this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.getView().getModel("BRMMaster").setProperty("/CCStewApprov", oCostCenterApprov);
 			this.loadAddEditCCApprover(oEvent);
 		},
 		onPCStewDetails: function (oEvent) {
 			var oPCStew = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oPCStew.Edit = true;
 			this.getView().getModel("BRMMaster").setProperty("/PCStewApprov", oPCStew);
 			//	this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.loadAddEditPCStew(oEvent);
 		},
 		onPCApproverDetails: function (oEvent) {
 			var oPCAprov = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oPCAprov.Edit = true;
 			//this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.getView().getModel("BRMMaster").setProperty("/PCStewApprov", oPCAprov);
 			this.loadAddEditPCApprover(oEvent);
 		},
 		onGLStewDetails: function (oEvent) {
 			var oGLStew = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+			oGLStew.Edit = true;
 			this.getView().getModel("BRMMaster").setProperty("/GLStewApprov", oGLStew);
 			//	this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.loadAddEditGLStew(oEvent);
 		},
 		onGLApproverDetails: function (oEvent) {
 			var oGLAprov = oEvent.oSource.oBindingContexts.BRMMaster.getObject();
+				oGLAprov.Edit = true;
 			//this.getView().getModel("CustStewApprov").setData(oVendor);
 			this.getView().getModel("BRMMaster").setProperty("/GLStewApprov", oGLAprov);
 			this.loadAddEditGLApprover(oEvent);
+		},
+		addEditCCAprover: function () {
+			this.emptyCCStewAprovObject();
+			this.loadAddEditCCApprover();
 		},
 		loadAddEditCCApprover: function () {
 			var oView = this.getView();
@@ -717,6 +784,10 @@ sap.ui.define([
 			this._oDialogCCAprovr.then(function (oCCAprovrDialog) {
 				oCCAprovrDialog.open();
 			}.bind(this));
+		},
+		addEditCustApprover: function (oEvent) {
+			this.emptyCustStewApprovObject();
+			this.loadAddEditCustApprover(oEvent);
 		},
 		loadAddEditCustApprover: function (oEvent) {
 			var oView = this.getView();
@@ -735,6 +806,10 @@ sap.ui.define([
 			}.bind(this));
 
 		},
+		addEditPCAprover: function () {
+			this.loadAddEditPCApprover();
+			this.emptyPCStewAprovObject();
+		},
 		loadAddEditPCApprover: function () {
 			var oView = this.getView();
 			if (!this._oDialogPCAprovr) {
@@ -750,6 +825,10 @@ sap.ui.define([
 			this._oDialogPCAprovr.then(function (oPCAprovrDialog) {
 				oPCAprovrDialog.open();
 			}.bind(this));
+		},
+		addEditGLAprovr: function () {
+			this.emptyGLStewAprovObject();
+			this.loadAddEditGLApprover();
 		},
 		loadAddEditGLApprover: function () {
 			var oView = this.getView();
@@ -796,6 +875,30 @@ sap.ui.define([
 				oPCAprovrDialog.close();
 			}.bind(this));
 		},
+		addEditCustStew: function (oEvent) {
+			this.emptyCustStewApprovObject(oEvent);
+			this.loadAddEditCustStew(oEvent);
+		},
+		emptyCustStewApprovObject: function () {
+			var sRandnum = Math.random().toString(36).substring(2, 15);
+			this.getView().getModel("BRMMaster").setProperty("/CustStewApprov", {
+				ruleId: sRandnum,
+				custom_key: "gfde8108e8g78",
+				condition: "",
+				approver: [
+
+				],
+				logic: "=",
+				value: "",
+				attributeName: "CountryCodeAccountGroup",
+				isDeleted: false,
+				Edit: false,
+				countrycode: "",
+				accountgrp: ""
+
+			});
+		},
+
 		loadAddEditCustStew: function (oEvent) {
 			var oView = this.getView();
 			if (!this._oDialogCustStew) {
@@ -813,6 +916,27 @@ sap.ui.define([
 			}.bind(this));
 
 		},
+		addEditCCStew: function (oEvent) {
+			this.emptyCCStewAprovObject();
+			this.loadAddEditCCStew(oEvent);
+		},
+		emptyCCStewAprovObject: function () {
+			var sRandnum = Math.random().toString(36).substring(2, 15);
+			this.getView().getModel("BRMMaster").setProperty("/CCStewApprov", {
+				ruleId: sRandnum,
+				custom_key: "4a8i2a7c9585e",
+				condition: "",
+				approver: [],
+				logic: "=",
+				value: "",
+				attributeName: "CountryCodeAccountGroup",
+				isDeleted: false,
+				Edit: false,
+				countrycode: "",
+				accountgrp: ""
+			});
+		},
+
 		loadAddEditCCStew: function (oEvent) {
 			var oView = this.getView();
 			if (!this._oDialogCCStew) {
@@ -830,7 +954,29 @@ sap.ui.define([
 			}.bind(this));
 
 		},
-		loadAddEditPCStew: function (oEvent) {
+		addEditPCStew: function () {
+			this.emptyPCStewAprovObject();
+			this.loadAddEditPCStew();
+		},
+		emptyPCStewAprovObject: function () {
+			var sRandnum = Math.random().toString(36).substring(2, 15);
+			this.getView().getModel("BRMMaster").setProperty("/PCStewApprov", {
+				ruleId: sRandnum,
+				custom_key: "4a8i2a7c9585e",
+				condition: "",
+				approver: [],
+				logic: "=",
+				value: "",
+				attributeName: "CountryCodeAccountGroup",
+				isDeleted: false,
+				Edit: false,
+				countrycode: "",
+				accountgrp: ""
+			});
+
+		},
+
+		loadAddEditPCStew: function () {
 			var oView = this.getView();
 			if (!this._oDialogPCStew) {
 				this._oDialogPCStew = Fragment.load({
@@ -845,6 +991,28 @@ sap.ui.define([
 			this._oDialogPCStew.then(function (oPCStewDialog) {
 				oPCStewDialog.open();
 			}.bind(this));
+
+		},
+		addEditGLStew: function () {
+			this.emptyGLStewAprovObject();
+			this.loadAddEditGLStew();
+		},
+
+		emptyGLStewAprovObject: function () {
+			var sRandnum = Math.random().toString(36).substring(2, 15);
+			this.getView().getModel("BRMMaster").setProperty("/GLStewApprov", {
+				ruleId: sRandnum,
+				custom_key: "0i85b845jf0djd",
+				condition: "",
+				approver: [],
+				logic: "=",
+				value: "",
+				attributeName: "CountryCodeAccountGroup",
+				isDeleted: false,
+				Edit: false,
+				countrycode: "",
+				accountgrp: ""
+			});
 
 		},
 		loadAddEditGLStew: function (oEvent) {
@@ -892,6 +1060,10 @@ sap.ui.define([
 				oPCStewDialog.close();
 			}.bind(this));
 		},
+		addEditVendorApprover: function (oEvent) {
+			this.emptyVendorObject();
+			this.loadAddEditVendorApprovr(oEvent);
+		},
 		loadAddEditVendorApprovr: function (oEvent) {
 			var oView = this.getView();
 			if (!this._oDialogVendApprov) {
@@ -919,8 +1091,32 @@ sap.ui.define([
 		onSaveVendSteward: function () {
 			this.getView().setBusy(true);
 			var oResult = this.getView().getModel("BRMMaster").getProperty("/oMDGApproverData");
-			var oSelRoule = this.getView().getModel("VendrStewApprov").getData();
+			var oVendstewObj = Object.assign({}, this.getView().getModel("VendrStewApprov").getData());
+			var bEdit = oVendstewObj.Edit;
+			var countrycode = oVendstewObj.countrycode;
+			var accountgrp = oVendstewObj.accountgrp;
+			delete oVendstewObj.Edit;
+			delete oVendstewObj.countrycode;
+			delete oVendstewObj.accountgrp;
 			var oMDGVend = this.getView().getModel("MDGVendorWorkflow").getData();
+			if (bEdit) {
+				this.oncreateupdateVendSteward(oMDGVend);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGVend.teamDetailDto[1].eventName === "Steward Task") {
+						oMDGVend.teamDetailDto[1].ownerSelectionRules.push(oVendstewObj);
+						this.oncreateupdateVendSteward(oMDGVend);
+					}
+				}
+			}
+
+		},
+		oncreateupdateVendSteward: function (oMDGVend) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -933,9 +1129,31 @@ sap.ui.define([
 		},
 		onSaveVendApprover: function () {
 			this.getView().setBusy(true);
-			var oResult = this.getView().getModel("BRMMaster").getProperty("/oMDGApproverData");
-			var oSelRoule = this.getView().getModel("VendrStewApprov").getData();
+			var oVendstewObj = Object.assign({}, this.getView().getModel("VendrStewApprov").getData());
+			var bEdit = oVendstewObj.Edit;
+			var countrycode = oVendstewObj.countrycode;
+			var accountgrp = oVendstewObj.accountgrp;
+			delete oVendstewObj.Edit;
+			delete oVendstewObj.countrycode;
+			delete oVendstewObj.accountgrp;
 			var oMDGVend = this.getView().getModel("MDGVendorWorkflow").getData();
+			if (bEdit) {
+				this.oncreateupdateVendApprover(oMDGVend);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGVend.teamDetailDto[0].eventName === "ApproverTask") {
+						oMDGVend.teamDetailDto[0].ownerSelectionRules.push(oVendstewObj);
+						this.oncreateupdateVendApprover(oMDGVend);
+					}
+				}
+			}
+		},
+		oncreateupdateVendApprover: function (oMDGVend) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -945,26 +1163,35 @@ sap.ui.define([
 			this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
 				this.onCloseVendApprover();
 			}.bind(this));
-
-			/*	var aOwnerSelectionRules = [];
-				oMDGVend.teamDetailDto.find(function (post) {
-					if (post.eventName == "ApproverTask") {
-						//	msdgVendApprover.push(post);post.ownerSelectionRules
-						post.ownerSelectionRules.find(function (post2) {
-							if (oSelRoule.value === post2.value) {
-								aOwnerSelectionRules.push(oSelRoule);
-							} else {
-								aOwnerSelectionRules.push(post2);
-
-							}
-						})
-					}
-				});*/
-
 		},
 		onSaveCustSteward: function () {
 			this.getView().setBusy(true);
+			var oCustStew = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/CustStewApprov"));
+			let bEdit = oCustStew.Edit;
+			let countrycode = oCustStew.countrycode;
+			let accountgrp = oCustStew.accountgrp;
+			delete oCustStew.Edit;
+			delete oCustStew.countrycode;
+			delete oCustStew.accountgrp;
 			var oMDGCust = this.getView().getModel("BRMMaster").getProperty("/MDGCustomerWorkflow");
+			if (bEdit) {
+				this.oncreateupdateCustSteward(oMDGCust);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGCust.teamDetailDto[0].eventName === "Steward Task") {
+						oMDGCust.teamDetailDto[0].ownerSelectionRules.push(oCustStew);
+						this.oncreateupdateCustSteward(oMDGCust);
+					}
+				}
+			}
+
+		},
+		oncreateupdateCustSteward: function (oMDGCust) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -977,7 +1204,32 @@ sap.ui.define([
 		},
 		onSaveCustApprover: function () {
 			this.getView().setBusy(true);
+			var oCustAprovr = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/CustStewApprov"));
+			let bEdit = oCustAprovr.Edit;
+			let countrycode = oCustAprovr.countrycode;
+			let accountgrp = oCustAprovr.accountgrp;
+			delete oCustAprovr.Edit;
+			delete oCustAprovr.countrycode;
+			delete oCustAprovr.accountgrp;
 			var oMDGCust = this.getView().getModel("BRMMaster").getProperty("/MDGCustomerWorkflow");
+			if (bEdit) {
+				this.oncreateupdateCustAprovr(oMDGCust);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGCust.teamDetailDto[0].eventName === "ApproverTask") {
+						oMDGCust.teamDetailDto[0].ownerSelectionRules.push(oCustAprovr);
+						this.oncreateupdateCustAprovr(oMDGCust);
+					}
+				}
+			}
+
+		},
+		oncreateupdateCustAprovr: function (oMDGCust) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -991,12 +1243,38 @@ sap.ui.define([
 		},
 		onSaveCCApprover: function () {
 			this.getView().setBusy(true);
-			var oMDGCust = this.getView().getModel("BRMMaster").getProperty("/MDGCCWorkflow");
+
+			var oCCAprovr = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/CCStewApprov"));
+			let bEdit = oCCAprovr.Edit;
+			let countrycode = oCCAprovr.countrycode;
+			let accountgrp = oCCAprovr.accountgrp;
+			delete oCCAprovr.Edit;
+			delete oCCAprovr.countrycode;
+			delete oCCAprovr.accountgrp;
+			var oMDGCC = this.getView().getModel("BRMMaster").getProperty("/MDGCCWorkflow");
+			if (bEdit) {
+				this.oncreateupdateCCAprovr(oMDGCC);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGCC.teamDetailDto[0].eventName === "ApproverTask") {
+						oMDGCC.teamDetailDto[0].ownerSelectionRules.push(oCCAprovr);
+						this.oncreateupdateCCAprovr(oMDGCC);
+					}
+				}
+			}
+
+		},
+		oncreateupdateCCAprovr: function (oMDGCC) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
 				hasPayload: true,
-				data: oMDGCust
+				data: oMDGCC
 			};
 			this.serviceCall.handleServiceRequest(objParamCreate).then(function (oData) {
 				this.onCloseCCApprover();
@@ -1005,7 +1283,32 @@ sap.ui.define([
 		},
 		onSaveCCSteward: function () {
 			this.getView().setBusy(true);
+			var oCCStew = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/CCStewApprov"));
+			let bEdit = oCCStew.Edit;
+			let countrycode = oCCStew.countrycode;
+			let accountgrp = oCCStew.accountgrp;
+			delete oCCStew.Edit;
+			delete oCCStew.countrycode;
+			delete oCCStew.accountgrp;
 			var oMDGCostCenter = this.getView().getModel("BRMMaster").getProperty("/MDGCCWorkflow");
+			if (bEdit) {
+				this.oncreateupdateCCSteward(oMDGCostCenter);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGCostCenter.teamDetailDto[1].eventName === "Steward Task") {
+						oMDGCostCenter.teamDetailDto[1].ownerSelectionRules.push(oCCStew);
+						this.oncreateupdateCCSteward(oMDGCostCenter);
+					}
+				}
+			}
+
+		},
+		oncreateupdateCCSteward: function (oMDGCostCenter) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -1018,7 +1321,33 @@ sap.ui.define([
 		},
 		onSavePCSteward: function () {
 			this.getView().setBusy(true);
+
+			var oPCStew = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/PCStewApprov"));
+			let bEdit = oPCStew.Edit;
+			let countrycode = oPCStew.countrycode;
+			let accountgrp = oPCStew.accountgrp;
+			delete oPCStew.Edit;
+			delete oPCStew.countrycode;
+			delete oPCStew.accountgrp;
 			var oMDGProfitCenter = this.getView().getModel("BRMMaster").getProperty("/MDGPCWorkflow");
+			if (bEdit) {
+				this.oncreateupdatePCSteward(oMDGProfitCenter);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGProfitCenter.teamDetailDto[1].eventName === "Steward Task") {
+						oMDGProfitCenter.teamDetailDto[1].ownerSelectionRules.push(oPCStew);
+						this.oncreateupdatePCSteward(oMDGProfitCenter);
+					}
+				}
+			}
+
+		},
+		oncreateupdatePCSteward: function (oMDGProfitCenter) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -1031,7 +1360,32 @@ sap.ui.define([
 		},
 		onSavePCApprover: function () {
 			this.getView().setBusy(true);
+			var oPCAprov = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/PCStewApprov"));
+			let bEdit = oPCAprov.Edit;
+			let countrycode = oPCAprov.countrycode;
+			let accountgrp = oPCAprov.accountgrp;
+			delete oPCAprov.Edit;
+			delete oPCAprov.countrycode;
+			delete oPCAprov.accountgrp;
 			var oMDGPCApprov = this.getView().getModel("BRMMaster").getProperty("/MDGPCWorkflow");
+			if (bEdit) {
+				this.oncreateupdatePCAprover(oMDGPCApprov);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGPCApprov.teamDetailDto[0].eventName === "ApproverTask") {
+						oMDGPCApprov.teamDetailDto[0].ownerSelectionRules.push(oPCAprov);
+						this.oncreateupdatePCAprover(oMDGPCApprov);
+					}
+				}
+			}
+
+		},
+		oncreateupdatePCAprover: function (oMDGPCApprov) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -1044,7 +1398,32 @@ sap.ui.define([
 		},
 		onSaveGLSteward: function () {
 			this.getView().setBusy(true);
+			var oGLStew = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/GLStewApprov"));
+			let bEdit = oGLStew.Edit;
+			let countrycode = oGLStew.countrycode;
+			let accountgrp = oGLStew.accountgrp;
+			delete oGLStew.Edit;
+			delete oGLStew.countrycode;
+			delete oGLStew.accountgrp;
 			var oMDGGLStew = this.getView().getModel("BRMMaster").getProperty("/MDGGLWorkflow");
+			if (bEdit) {
+				this.oncreateupdateGLSteward(oMDGGLStew);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGGLStew.teamDetailDto[0].eventName === "Steward Task") {
+						oMDGGLStew.teamDetailDto[0].ownerSelectionRules.push(oGLStew);
+						this.oncreateupdateGLSteward(oMDGGLStew);
+					}
+				}
+			}
+
+		},
+		oncreateupdateGLSteward: function (oMDGGLStew) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',
@@ -1057,7 +1436,32 @@ sap.ui.define([
 		},
 		onSaveGLApprover: function () {
 			this.getView().setBusy(true);
+			var oGLAprov = Object.assign({}, this.getView().getModel("BRMMaster").getProperty("/GLStewApprov"));
+			let bEdit = oGLAprov.Edit;
+			let countrycode = oGLAprov.countrycode;
+			let accountgrp = oGLAprov.accountgrp;
+			delete oGLAprov.Edit;
+			delete oGLAprov.countrycode;
+			delete oGLAprov.accountgrp;
 			var oMDGGLApprov = this.getView().getModel("BRMMaster").getProperty("/MDGGLWorkflow");
+			if (bEdit) {
+				this.oncreateupdateGLAprover(oMDGGLApprov);
+			} else {
+				if (countrycode === "") {
+					MessageToast.show("Please Provide Country Code");
+
+				} else if (accountgrp === "") {
+					MessageToast.show("Please Provide Account Group");
+				} else {
+					if (oMDGGLApprov.teamDetailDto[1].eventName === "ApproverTask") {
+						oMDGGLApprov.teamDetailDto[1].ownerSelectionRules.push(oGLAprov);
+						this.oncreateupdateGLAprover(oMDGGLApprov);
+					}
+				}
+			}
+
+		},
+		oncreateupdateGLAprover: function (oMDGGLApprov) {
 			var objParamCreate = {
 				url: "/MDM_WORKBOX_DEST/customProcess/updateProcess",
 				type: 'POST',

@@ -56,6 +56,7 @@
 					<headerToolbar>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
+							<Button text="Add Rule" icon="sap-icon://add" type="Transparent" press="addEditVendor"></Button>
 							<SearchField placeholder="Search by Attribute" search="onVendStewrdTableSearch" width="17.5rem"/>
 						</OverflowToolbar>
 					</headerToolbar>
@@ -91,6 +92,7 @@
 					<headerToolbar>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
+							<Button text="Add Rule" icon="sap-icon://add" type="Transparent" press="addEditVendorApprover"></Button>
 							<SearchField placeholder="Search by Attribute" search="onVendApprovTableSearch" width="17.5rem"/>
 						</OverflowToolbar>
 					</headerToolbar>

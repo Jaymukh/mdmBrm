@@ -56,6 +56,7 @@
 					<headerToolbar>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
+							<Button text="Add Rule" icon="sap-icon://add" type="Transparent" press="addEditCustStew"></Button>
 							<SearchField placeholder="Search by Attribute" search="onCustStewrdTableSrch" width="17.5rem"/>
 						</OverflowToolbar>
 					</headerToolbar>
@@ -91,6 +92,7 @@
 					<headerToolbar>
 						<OverflowToolbar>
 							<ToolbarSpacer/>
+							<Button text="Add Rule" icon="sap-icon://add" type="Transparent" press="addEditCustApprover"></Button>
 							<SearchField placeholder="Search by Attribute" search="onCustAprobrTablSrch" width="17.5rem"/>
 						</OverflowToolbar>
 					</headerToolbar>

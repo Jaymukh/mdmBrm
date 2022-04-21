@@ -1,7 +1,8 @@
 <core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout"
 	xmlns:custData="http://schemas.sap.com/sapui5/extension/sap.ui.core.CustomData/1" xmlns:f="sap.ui.layout.form">
 	<!--	<Dialog title="{= ${BRMVendor>/Edit} ? Update Stage Approver: Add Stage Approver}" class="sapUiSizeCompact">-->
-	<Dialog title="Edit Stage Approver" contentWidth="40%" draggable="false" class="sapUiSizeCompact">
+	<Dialog title="{=${BRMMaster>/CustStewApprov/Edit} ? 'Edit Stage Approver' : 'Create Stage Approver'}" contentWidth="40%" draggable="false"
+		class="sapUiSizeCompact">
 		<content>
 			<VBox class="sapUiSmallMargin">
 				<f:Form editable="true" width="100%">
@@ -12,6 +13,18 @@
 					<f:formContainers>
 						<f:FormContainer >
 							<f:formElements>
+								<f:FormElement visible="{=!${BRMMaster>/CustStewApprov/Edit}}">
+									<f:label>
+										<Label text="COUNTRY CODE"/>
+									</f:label>
+									<Input change="onChangeCustCCACGrp" value="{BRMMaster>/CustStewApprov/countrycode}"></Input>
+								</f:FormElement>
+								<f:FormElement visible="{=!${BRMMaster>/CustStewApprov/Edit}}">
+									<f:label>
+										<Label text="ACCOUNT GROUP"/>
+									</f:label>
+									<Input change="onChangeCustCCACGrp" value="{BRMMaster>/CustStewApprov/accountgrp}"></Input>
+								</f:FormElement>
 								<f:FormElement >
 									<f:label>
 										<Label text="ATTRIBUTE"/>
@@ -41,7 +54,7 @@
 		</content>
 		<beginButton>
 			<!--	<Button text="{= ${BRMVendor>/Edit} ? Update : Create}" type="Accept" press="onSaveCustContacts"/>-->
-			<Button text="Update" type="Accept" press="onSaveCustApprover"/>
+			<Button text="{=${BRMMaster>/CustStewApprov/Edit} ? 'Update' : 'Create'}" type="Accept" press="onSaveCustApprover"/>
 		</beginButton>
 		<endButton>
 			<Button text="Cancel" type="Reject" press="onCloseCustApprover"/>
